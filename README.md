@@ -5,6 +5,7 @@
 O **Caderno de Erros** é uma aplicação web desenvolvida em Laravel que permite criar, gerenciar e estudar questões de múltipla escolha de forma inteligente, com foco nas questões que você mais erra.
 
 ![Tela Inicial]
+
 <img width="507" height="630" alt="Captura de tela 2025-08-24 123855" src="https://github.com/user-attachments/assets/b51bd1d3-c67a-4496-bf79-357406d20953" />
 
 
@@ -19,6 +20,7 @@ O **Caderno de Erros** é uma aplicação web desenvolvida em Laravel que permit
 - Interface responsiva e intuitiva
 
 ![Quiz Interface]
+
 <img width="507" height="630" alt="Captura de tela 2025-08-24 123855" src="https://github.com/user-attachments/assets/ecbb022c-d664-4166-a5b7-282f1bcbf02c" />
 
 
@@ -31,6 +33,7 @@ O **Caderno de Erros** é uma aplicação web desenvolvida em Laravel que permit
 - Validação de dados
 
 ![Criar Questão]
+
 <img width="482" height="630" alt="Captura de tela 2025-08-24 123817" src="https://github.com/user-attachments/assets/4d659fc1-bd80-4ae7-9c8a-3b789029715b" />
 
 
@@ -41,9 +44,11 @@ O **Caderno de Erros** é uma aplicação web desenvolvida em Laravel que permit
 - Organização eficiente do conteúdo
 
 ![Excluir Questões]
+
 <img width="515" height="496" alt="Captura de tela 2025-08-24 123829" src="https://github.com/user-attachments/assets/0e655e6f-b6b2-427a-96c1-0e186a54c63a" />
 
 ![Gerenciar Categorias]
+
 <img width="527" height="468" alt="Captura de tela 2025-08-24 123839" src="https://github.com/user-attachments/assets/d4814f7d-428b-4387-ad54-0fcc47e9618a" />
 
 
