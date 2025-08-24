@@ -1,29 +1,15 @@
-# railway.toml
 [build]
 builder = "nixpacks"
-# Somente instalar dependências no build
 buildCommand = "composer install --no-dev --optimize-autoloader"
 
 [deploy]
-# Comandos PHP que precisam rodar após o build
-startCommand = """
-php artisan key:generate
-php artisan config:cache
-php artisan migrate --force
-php -S 0.0.0.0:$PORT -t public
-"""
+startCommand = "php artisan key:generate && php artisan migrate --force && php -S 0.0.0.0:$PORT -t public"
 
 [env]
-# Variáveis principais do Laravel
 APP_NAME = "Caderno de Erros"
 APP_ENV = "production"
-APP_KEY = ""               # será gerada no startCommand
+APP_KEY = ""
 APP_DEBUG = "false"
 APP_URL = "https://caderno-de-erros-production.up.railway.app"
-
-# Configuração de banco de dados
-DB_CONNECTION = "mysql"       # ou "mysql"
+DB_CONNECTION = "mysql"
 DB_FOREIGN_KEYS = "true"
-
-# Log
-LOG_CHANNEL = "stderr"
