@@ -19,7 +19,8 @@ O **Caderno de Erros** é uma aplicação web desenvolvida em Laravel que permit
 - Interface responsiva e intuitiva
 
 ![Quiz Interface]
-<img width="482" height="630" alt="Captura de tela 2025-08-24 123817" src="https://github.com/user-attachments/assets/8ac57df3-a7bb-4f07-a1e3-20526747235a" />
+<img width="507" height="630" alt="Captura de tela 2025-08-24 123855" src="https://github.com/user-attachments/assets/ecbb022c-d664-4166-a5b7-282f1bcbf02c" />
+
 
 
 ### 📝 Criação de Questões
