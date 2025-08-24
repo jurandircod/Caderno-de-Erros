@@ -1,26 +1,14 @@
 [build]
 builder = "nixpacks"
-buildCommand = """
-  composer install --no-dev --optimize-autoloader
-  chmod -R 775 storage bootstrap/cache
-  mkdir -p database
-  touch database/database.sqlite
-"""
+buildCommand = "composer install --no-dev --optimize-autoloader"
 
 [deploy]
-startCommand = "php -S 0.0.0.0:$PORT -t public"
-postDeployCommand = """
-  php artisan key:generate
-  php artisan config:cache
-  php artisan route:cache
-  php artisan view:cache
-  php artisan migrate --force
-"""
+startCommand = "php artisan key:generate && php artisan migrate --force && php -S 0.0.0.0:$PORT -t public"
 
 [env]
 APP_NAME = "Caderno de Erros"
 APP_ENV = "production"
-APP_KEY = ""  # Será gerada pelo build
+APP_KEY = ""
 APP_DEBUG = "false"
 APP_URL = "https://caderno-de-erros-production.up.railway.app"
 DB_CONNECTION = "sqlite"
