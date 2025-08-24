@@ -8,6 +8,8 @@
     <title>@yield('title', 'Caderno de Erros')</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/4345/4345016.png">
     <style>
         /* Custom animations */
         @keyframes fadeInUp {

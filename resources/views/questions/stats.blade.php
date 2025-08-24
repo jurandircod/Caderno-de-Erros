@@ -151,52 +151,52 @@
                 @else
                     @foreach($mostWrong->groupBy('category.name') as $categoryName => $questions)
                         <div class="mb-6 last:mb-0">
-                            <!-- note: type="button" fixed aqui -->
-                            <button type="button" class="w-full text-left p-4 bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-xl hover:shadow-md transition-all duration-300 flex items-center justify-between group" 
-                                    data-bs-toggle="collapse" 
-                                    data-bs-target="#wrong-{{ Str::slug($categoryName) }}" 
-                                    aria-expanded="false">
-                                <div class="flex items-center">
-                                    <div class="w-8 h-8 bg-gradient-to-r from-red-500 to-pink-600 rounded-lg flex items-center justify-center mr-3">
-                                        <i class="fas fa-folder text-white text-sm"></i>
+                            <!-- Usando details/summary nativo -->
+                            <details id="wrong-{{ Str::slug($categoryName) }}" class="group rounded-xl border border-red-200 overflow-hidden">
+                                <summary class="flex items-center justify-between p-4 bg-gradient-to-r from-red-50 to-pink-50 cursor-pointer list-none">
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 bg-gradient-to-r from-red-500 to-pink-600 rounded-lg flex items-center justify-center mr-3">
+                                            <i class="fas fa-folder text-white text-sm"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="font-bold text-gray-800">{{ $categoryName ?? 'Sem Categoria' }}</h5>
+                                            <p class="text-sm text-gray-600">{{ $questions->count() }} questões</p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h5 class="font-bold text-gray-800">{{ $categoryName ?? 'Sem Categoria' }}</h5>
-                                        <p class="text-sm text-gray-600">{{ $questions->count() }} questões</p>
-                                    </div>
-                                </div>
-                                <i class="fas fa-chevron-down text-red-400 group-hover:text-red-600 transition-colors duration-300"></i>
-                            </button>
 
-                            <div class="collapse mt-2" id="wrong-{{ Str::slug($categoryName) }}">
-                                <div class="space-y-3">
-                                    @foreach($questions as $q)
-                                        <div class="p-4 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-300">
-                                            <div class="flex flex-col space-y-3">
-                                                <h6 class="font-semibold text-gray-800 text-sm leading-relaxed">{{ $q->question_text }}</h6>
-                                                <div class="flex flex-wrap gap-2">
-                                                    <span class="inline-flex items-center px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-bold">
-                                                        <i class="fas fa-times mr-1"></i>
-                                                        Erros: {{ $q->wrong_count }}
-                                                    </span>
-                                                    <span class="inline-flex items-center px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold">
-                                                        <i class="fas fa-check mr-1"></i>
-                                                        Acertos: {{ $q->correct_count }}
-                                                    </span>
-                                                    <span class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold">
-                                                        <i class="fas fa-calculator mr-1"></i>
-                                                        Total: {{ $q->wrong_count + $q->correct_count }}
-                                                    </span>
-                                                    <span class="inline-flex items-center px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-bold">
-                                                        <i class="fas fa-percentage mr-1"></i>
-                                                        Taxa: {{ $q->wrong_count + $q->correct_count > 0 ? round(($q->correct_count/($q->correct_count+$q->wrong_count))*100, 2) : 0 }}%
-                                                    </span>
+                                    <i class="fas fa-chevron-down text-red-400 transition-transform duration-200 transform group-open:rotate-180"></i>
+                                </summary>
+
+                                <div class="px-4 py-3 transition-[max-height,opacity] duration-300 ease-out bg-white">
+                                    <div class="space-y-3">
+                                        @foreach($questions as $q)
+                                            <div class="p-4 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-300">
+                                                <div class="flex flex-col space-y-3">
+                                                    <h6 class="font-semibold text-gray-800 text-sm leading-relaxed">{{ $q->question_text }}</h6>
+                                                    <div class="flex flex-wrap gap-2">
+                                                        <span class="inline-flex items-center px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-bold">
+                                                            <i class="fas fa-times mr-1"></i>
+                                                            Erros: {{ $q->wrong_count }}
+                                                        </span>
+                                                        <span class="inline-flex items-center px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold">
+                                                            <i class="fas fa-check mr-1"></i>
+                                                            Acertos: {{ $q->correct_count }}
+                                                        </span>
+                                                        <span class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold">
+                                                            <i class="fas fa-calculator mr-1"></i>
+                                                            Total: {{ $q->wrong_count + $q->correct_count }}
+                                                        </span>
+                                                        <span class="inline-flex items-center px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-bold">
+                                                            <i class="fas fa-percentage mr-1"></i>
+                                                            Taxa: {{ $q->wrong_count + $q->correct_count > 0 ? round(($q->correct_count/($q->correct_count+$q->wrong_count))*100, 2) : 0 }}%
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    @endforeach
+                                        @endforeach
+                                    </div>
                                 </div>
-                            </div>
+                            </details>
                         </div>
                     @endforeach
                 @endif
@@ -223,52 +223,51 @@
                 @else
                     @foreach($mostCorrect->groupBy('category.name') as $categoryName => $questions)
                         <div class="mb-6 last:mb-0">
-                            <!-- type="button" fix -->
-                            <button type="button" class="w-full text-left p-4 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl hover:shadow-md transition-all duration-300 flex items-center justify-between group" 
-                                    data-bs-toggle="collapse" 
-                                    data-bs-target="#correct-{{ Str::slug($categoryName) }}" 
-                                    aria-expanded="false">
-                                <div class="flex items-center">
-                                    <div class="w-8 h-8 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center mr-3">
-                                        <i class="fas fa-folder text-white text-sm"></i>
+                            <details id="correct-{{ Str::slug($categoryName) }}" class="group rounded-xl border border-emerald-200 overflow-hidden">
+                                <summary class="flex items-center justify-between p-4 bg-gradient-to-r from-emerald-50 to-teal-50 cursor-pointer list-none">
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center mr-3">
+                                            <i class="fas fa-folder text-white text-sm"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="font-bold text-gray-800">{{ $categoryName ?? 'Sem Categoria' }}</h5>
+                                            <p class="text-sm text-gray-600">{{ $questions->count() }} questões</p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h5 class="font-bold text-gray-800">{{ $categoryName ?? 'Sem Categoria' }}</h5>
-                                        <p class="text-sm text-gray-600">{{ $questions->count() }} questões</p>
-                                    </div>
-                                </div>
-                                <i class="fas fa-chevron-down text-emerald-400 group-hover:text-emerald-600 transition-colors duration-300"></i>
-                            </button>
 
-                            <div class="collapse mt-2" id="correct-{{ Str::slug($categoryName) }}">
-                                <div class="space-y-3">
-                                    @foreach($questions as $q)
-                                        <div class="p-4 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-300">
-                                            <div class="flex flex-col space-y-3">
-                                                <h6 class="font-semibold text-gray-800 text-sm leading-relaxed">{{ $q->question_text }}</h6>
-                                                <div class="flex flex-wrap gap-2">
-                                                    <span class="inline-flex items-center px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold">
-                                                        <i class="fas fa-check mr-1"></i>
-                                                        Acertos: {{ $q->correct_count }}
-                                                    </span>
-                                                    <span class="inline-flex items-center px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-bold">
-                                                        <i class="fas fa-times mr-1"></i>
-                                                        Erros: {{ $q->wrong_count }}
-                                                    </span>
-                                                    <span class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold">
-                                                        <i class="fas fa-calculator mr-1"></i>
-                                                        Total: {{ $q->wrong_count + $q->correct_count }}
-                                                    </span>
-                                                    <span class="inline-flex items-center px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-bold">
-                                                        <i class="fas fa-percentage mr-1"></i>
-                                                        Taxa: {{ $q->wrong_count + $q->correct_count > 0 ? round(($q->correct_count/($q->correct_count+$q->wrong_count))*100, 2) : 0 }}%
-                                                    </span>
+                                    <i class="fas fa-chevron-down text-emerald-400 transition-transform duration-200 transform group-open:rotate-180"></i>
+                                </summary>
+
+                                <div class="px-4 py-3 transition-[max-height,opacity] duration-300 ease-out bg-white">
+                                    <div class="space-y-3">
+                                        @foreach($questions as $q)
+                                            <div class="p-4 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-300">
+                                                <div class="flex flex-col space-y-3">
+                                                    <h6 class="font-semibold text-gray-800 text-sm leading-relaxed">{{ $q->question_text }}</h6>
+                                                    <div class="flex flex-wrap gap-2">
+                                                        <span class="inline-flex items-center px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold">
+                                                            <i class="fas fa-check mr-1"></i>
+                                                            Acertos: {{ $q->correct_count }}
+                                                        </span>
+                                                        <span class="inline-flex items-center px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-bold">
+                                                            <i class="fas fa-times mr-1"></i>
+                                                            Erros: {{ $q->wrong_count }}
+                                                        </span>
+                                                        <span class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold">
+                                                            <i class="fas fa-calculator mr-1"></i>
+                                                            Total: {{ $q->wrong_count + $q->correct_count }}
+                                                        </span>
+                                                        <span class="inline-flex items-center px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-bold">
+                                                            <i class="fas fa-percentage mr-1"></i>
+                                                            Taxa: {{ $q->wrong_count + $q->correct_count > 0 ? round(($q->correct_count/($q->correct_count+$q->wrong_count))*100, 2) : 0 }}%
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    @endforeach
+                                        @endforeach
+                                    </div>
                                 </div>
-                            </div>
+                            </details>
                         </div>
                     @endforeach
                 @endif
@@ -324,17 +323,35 @@
 .overflow-y-auto::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 3px; }
 .overflow-y-auto::-webkit-scrollbar-thumb:hover { background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%); }
 
-/* Collapse animation using max-height to avoid flicker */
-.collapse {
+/* details/summary styling + animation */
+/* remove default marker */
+summary::-webkit-details-marker { display: none; }
+details summary { list-style: none; outline: none; }
+
+/* visual summary */
+details summary { cursor: pointer; }
+
+/* animate inner content using max-height and opacity */
+details > div {
     max-height: 0;
     opacity: 0;
+    overflow: hidden;
     transition: max-height 0.35s ease, opacity 0.25s ease;
-    will-change: max-height, opacity;
 }
-.collapse.show {
-    max-height: 2000px; /* valor alto suficiente para seu conteúdo */
+
+/* when open, reveal */
+details[open] > div {
+    max-height: 2000px; /* alto o suficiente */
     opacity: 1;
 }
+
+/* rotate chevron when open using attribute selector */
+details[open] .fa-chevron-down {
+    transform: rotate(180deg);
+}
+
+/* utility to ensure smooth rotation */
+.fa-chevron-down { transition: transform 0.2s ease; }
 </style>
 @endsection
 
@@ -421,94 +438,6 @@
             },
             animation: { duration: 2000, easing: 'easeInOutQuart' }
         }
-    });
-
-    // Collapse behavior (custom, sem depender do Bootstrap JS)
-    document.addEventListener('DOMContentLoaded', function() {
-        const collapseButtons = document.querySelectorAll('[data-bs-toggle="collapse"]');
-
-        collapseButtons.forEach(button => {
-            button.addEventListener('click', function(event) {
-                // evita submit / propagação indesejada
-                event.preventDefault();
-                event.stopPropagation();
-
-                const targetSelector = this.getAttribute('data-bs-target');
-                if (!targetSelector) return;
-                const target = document.querySelector(targetSelector);
-                if (!target) return;
-
-                const chevron = this.querySelector('.fas.fa-chevron-down, .fas.fa-chevron-up');
-                const isOpen = target.classList.contains('show');
-
-                // Opcional: fechar outros colapses ao abrir um (comente se não quiser)
-                document.querySelectorAll('.collapse.show').forEach(openEl => {
-                    if (openEl !== target) {
-                        openEl.classList.remove('show');
-                        openEl.style.maxHeight = '0px';
-                        openEl.setAttribute('aria-hidden', 'true');
-                        const parentBtn = document.querySelector(`[data-bs-target="#${openEl.id}"]`);
-                        if (parentBtn) {
-                            parentBtn.setAttribute('aria-expanded', 'false');
-                            const ch = parentBtn.querySelector('.fas.fa-chevron-down, .fas.fa-chevron-up');
-                            if (ch) ch.style.transform = 'rotate(0deg)';
-                        }
-                    }
-                });
-
-                if (isOpen) {
-                    // fechar
-                    // força início da transição com altura atual
-                    target.style.maxHeight = target.scrollHeight + 'px';
-                    // força reflow
-                    target.offsetHeight;
-                    target.style.maxHeight = '0px';
-                    target.classList.remove('show');
-                    target.setAttribute('aria-hidden', 'true');
-                    this.setAttribute('aria-expanded', 'false');
-                    if (chevron) chevron.style.transform = 'rotate(0deg)';
-                    // opcional: limpar maxHeight depois da transição
-                    const onCloseEnd = function() {
-                        target.removeEventListener('transitionend', onCloseEnd);
-                        // manter 0 para clareza (pode remover se preferir '')
-                        target.style.maxHeight = '0px';
-                    };
-                    target.addEventListener('transitionend', onCloseEnd);
-                } else {
-                    // abrir
-                    target.classList.add('show');
-                    target.setAttribute('aria-hidden', 'false');
-                    this.setAttribute('aria-expanded', 'true');
-
-                    // ajustar maxHeight para a animação
-                    target.style.maxHeight = '0px';
-                    // força reflow
-                    target.offsetHeight;
-                    const fullHeight = target.scrollHeight;
-                    target.style.maxHeight = fullHeight + 'px';
-
-                    if (chevron) chevron.style.transform = 'rotate(180deg)';
-
-                    // quando terminar, remove max-height inline para ficar fluido caso conteúdo mude
-                    const onOpenEnd = function() {
-                        target.removeEventListener('transitionend', onOpenEnd);
-                        target.style.maxHeight = 'none';
-                    };
-                    target.addEventListener('transitionend', onOpenEnd);
-                }
-            });
-        });
-
-        // Inicializa estados ARIA e maxHeight
-        document.querySelectorAll('.collapse').forEach(el => {
-            if (el.classList.contains('show')) {
-                el.style.maxHeight = 'none';
-                el.setAttribute('aria-hidden', 'false');
-            } else {
-                el.style.maxHeight = '0px';
-                el.setAttribute('aria-hidden', 'true');
-            }
-        });
     });
 </script>
 @endsection
