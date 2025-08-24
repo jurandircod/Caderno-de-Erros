@@ -1,6 +1,31 @@
+# railway.toml
 [build]
 builder = "nixpacks"
+# Comandos de build multilinha, cada um separado
+buildCommand = """
+composer install --no-dev --optimize-autoloader
+php artisan key:generate
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+chmod -R 775 storage bootstrap/cache
+mkdir -p database
+touch database/database.sqlite
+php artisan migrate --force
+"""
 
 [deploy]
+# Comando para iniciar o Laravel com servidor embutido PHP
 startCommand = "php -S 0.0.0.0:$PORT -t public"
-buildCommand = "composer install --no-dev --optimize-autoloader && php artisan key:generate && php artisan config:cache && php artisan route:cache && php artisan view:cache && chmod -R 775 storage bootstrap/cache && mkdir -p database && touch database/database.sqlite"
+
+[env]
+# Variáveis de ambiente padrão do Laravel
+APP_NAME = "Caderno de Erros"
+APP_ENV = "production"
+APP_KEY = "" # Será gerada pelo build
+APP_DEBUG = "false"
+APP_URL = "https://caderno-de-erros-production.up.railway.app"
+
+DB_CONNECTION = "sqlite"
+DB_DATABASE = "database/database.sqlite"
+DB_FOREIGN_KEYS = "true"
