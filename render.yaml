@@ -1,7 +1,7 @@
 services:
   - type: web
     name: caderno-de-erros
-    env: php
+    env: php  # ✅ Isso define o ambiente como PHP
     plan: free
     buildCommand: |
       composer install --no-dev --optimize-autoloader
