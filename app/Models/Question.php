@@ -14,20 +14,36 @@ class Question extends Model
         'options',
         'correct_answer',
         'reason',
-        'category_id' // 🔹 nova coluna para categoria
+        'category_id',
+        'user_id', // 🔹 nova coluna para categoria
     ];
+
 
     protected $casts = [
         'options' => 'array'
     ];
 
-    public static function getRandomQuestion($categoryIds = [])
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    
+    public static function getRandomQuestion($categoryIds = [], $userId = null)
     {
         $query = self::query();
 
         // Filtra por categorias se forem selecionadas
         if (!empty($categoryIds)) {
             $query->whereIn('category_id', $categoryIds);
+        }
+
+        if (!empty($userId)) {
+            $userId = is_numeric($userId) ? (int)$userId : null;
+            $query->where(function ($q) use ($userId) {
+                $q->whereNull('user_id')->orWhere('user_id', $userId);
+            });
+        } else {
+            $query->whereNull('user_id');
         }
 
         $questions = $query->get();

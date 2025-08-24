@@ -6,6 +6,10 @@ use App\Models\Question;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Models\Category;
+use App\Models\User;
+use Illuminate\Container\Attributes\Auth;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
+Use App\Http\Controllers\NotificationController;
 
 class QuestionController extends Controller
 {
@@ -16,6 +20,12 @@ class QuestionController extends Controller
 
     public function store(Request $request)
     {
+        $userId = FacadesAuth::check() ? FacadesAuth::id() : null;
+        if (!$userId) {
+            // Se o usuário não está autenticado, redireciona para a página de login
+            return NotificationController::redirectWithNotification('login', 'Você precisa estar logado para criar questões.', 'error');
+        }
+
         $request->validate([
             'question_text' => 'required|string',
             'option_a' => 'required|string',
@@ -38,13 +48,21 @@ class QuestionController extends Controller
             'correct_answer' => $request->correct_answer,
             'reason' => $request->reason,
             'category_id' => $request->category_id, // 🔹 salva categoria
+            'user_id' => $userId,
         ]);
         return redirect()->back()->with('success', 'Questão criada com sucesso!');
     }
 
     public function indexDelete()
     {
-        $questions = Question::with('category')->get();
+        if (FacadesAuth::check()) {
+            $userId = FacadesAuth::id();
+            $questions = Question::with('category')->where('user_id', $userId)->get();
+        } else {
+            // Se o usuário não está autenticado, a coleção de perguntas pode ser vazia
+            $questions = collect();
+        }
+
         return view('questions.delete', compact('questions'));
     }
 
@@ -60,10 +78,17 @@ class QuestionController extends Controller
 
     public function quiz(Request $request)
     {
-        $categories = Category::all();
-        $selectedCategories = $request->input('categories', []);
+        $userId = FacadesAuth::check() ? FacadesAuth::id() : null;
+        if (!$userId) {
+            // Se o usuário não está autenticado, redireciona para a página de login
+            return NotificationController::redirectWithNotification('login', 'Você precisa estar logado para acessar o quiz.', 'error');
+        }
 
-        $question = Question::getRandomQuestion($selectedCategories);
+        $categories = Category::where('user_id', $userId)->get();
+        $selectedCategories = $request->input('categories', []);
+        $userId = FacadesAuth::check() ? FacadesAuth::id() : null;
+
+        $question = Question::getRandomQuestion($selectedCategories, $userId);
 
         if (!$question) {
             return view('quiz', [

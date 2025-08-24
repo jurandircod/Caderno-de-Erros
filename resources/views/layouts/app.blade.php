@@ -104,54 +104,92 @@
 
             <!-- Navigation modernizada -->
             <nav class="mb-12 animate-fade-in-up" style="animation-delay: 0.2s">
-                <div class="bg-white/80 backdrop-blur-lg rounded-3xl p-2 shadow-xl border border-white/20">
-                    <div class="grid grid-cols-2 md:grid-cols-5 gap-2">
-                        <a href="{{ route('quiz') }}" class="nav-item group {{ Route::is('quiz') ? 'active' : '' }}">
-                            <div
-                                class="flex flex-col items-center p-4 rounded-2xl transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-indigo-500 group-hover:to-purple-600 group-hover:text-white group-hover:shadow-lg group-hover:scale-105">
-                                <i
-                                    class="fas fa-brain text-2xl mb-2 transition-transform duration-300 group-hover:scale-110"></i>
-                                <span class="font-semibold text-sm">Estudar</span>
-                            </div>
-                        </a>
-                        <a href="{{ route('questions.create') }}"
-                            class="nav-item group {{ Route::is('questions.create') ? 'active' : '' }}">
-                            <div
-                                class="flex flex-col items-center p-4 rounded-2xl transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-emerald-500 group-hover:to-teal-600 group-hover:text-white group-hover:shadow-lg group-hover:scale-105">
-                                <i
-                                    class="fas fa-plus-circle text-2xl mb-2 transition-transform duration-300 group-hover:scale-110"></i>
-                                <span class="font-semibold text-sm">Nova Questão</span>
-                            </div>
-                        </a>
-                        <a href="{{ route('questions.delete') }}" class="nav-item group">
-                            <div
-                                class="flex flex-col items-center p-4 rounded-2xl transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-red-500 group-hover:to-pink-600 group-hover:text-white group-hover:shadow-lg group-hover:scale-105">
-                                <i
-                                    class="fas fa-trash-alt text-2xl mb-2 transition-transform duration-300 group-hover:scale-110"></i>
-                                <span class="font-semibold text-sm">Excluir</span>
-                            </div>
-                        </a>
-                        <a href="{{ route('categories.index') }}"
-                            class="nav-item group {{ Route::is('categories.index') ? 'active' : '' }}">
-                            <div
-                                class="flex flex-col items-center p-4 rounded-2xl transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-orange-500 group-hover:to-yellow-600 group-hover:text-white group-hover:shadow-lg group-hover:scale-105">
-                                <i
-                                    class="fas fa-tags text-2xl mb-2 transition-transform duration-300 group-hover:scale-110"></i>
-                                <span class="font-semibold text-sm">Categorias</span>
-                            </div>
-                        </a>
-                        <a href="{{ route('questions.stats') }}"
-                            class="nav-item group {{ Route::is('questions.stats') ? 'active' : '' }}">
-                            <div
-                                class="flex flex-col items-center p-4 rounded-2xl transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-cyan-500 group-hover:to-blue-600 group-hover:text-white group-hover:shadow-lg group-hover:scale-105">
-                                <i
-                                    class="fas fa-chart-bar text-2xl mb-2 transition-transform duration-300 group-hover:scale-110"></i>
-                                <span class="font-semibold text-sm">Estatísticas</span>
-                            </div>
-                        </a>
+                <div class="flex justify-center">
+                    <div
+                        class="bg-white/80 backdrop-blur-lg rounded-3xl p-2 shadow-xl border border-white/20 max-w-4xl w-full">
+                        <div class="grid grid-cols-3 sm:grid-cols-5 gap-1">
+                            @if (Auth::check())
+                                <a href="{{ route('quiz') }}"
+                                    class="nav-item group {{ Route::is('quiz') ? 'active' : '' }}">
+                                    <div
+                                        class="flex flex-col items-center p-2 rounded-xl transition-all duration-200 group-hover:bg-gradient-to-r group-hover:from-indigo-500 group-hover:to-purple-600 group-hover:text-white group-hover:shadow-md group-hover:scale-103">
+                                        <i
+                                            class="fas fa-brain text-lg mb-1 transition-transform duration-200 group-hover:scale-105"></i>
+                                        <span class="font-semibold text-xs">Estudar</span>
+                                    </div>
+                                </a>
+
+                                <a href="{{ route('questions.create') }}"
+                                    class="nav-item group {{ Route::is('questions.create') ? 'active' : '' }}">
+                                    <div
+                                        class="flex flex-col items-center p-2 rounded-xl transition-all duration-200 group-hover:bg-gradient-to-r group-hover:from-emerald-500 group-hover:to-teal-600 group-hover:text-white group-hover:shadow-md group-hover:scale-103">
+                                        <i
+                                            class="fas fa-plus-circle text-lg mb-1 transition-transform duration-200 group-hover:scale-105"></i>
+                                        <span class="font-semibold text-xs">Nova Questão</span>
+                                    </div>
+                                </a>
+
+                                <a href="{{ route('questions.delete') }}" class="nav-item group">
+                                    <div
+                                        class="flex flex-col items-center p-2 rounded-xl transition-all duration-200 group-hover:bg-gradient-to-r group-hover:from-red-500 group-hover:to-pink-600 group-hover:text-white group-hover:shadow-md group-hover:scale-103">
+                                        <i
+                                            class="fas fa-trash-alt text-lg mb-1 transition-transform duration-200 group-hover:scale-105"></i>
+                                        <span class="font-semibold text-xs">Excluir</span>
+                                    </div>
+                                </a>
+
+                                <a href="{{ route('categories.index') }}"
+                                    class="nav-item group {{ Route::is('categories.index') ? 'active' : '' }}">
+                                    <div
+                                        class="flex flex-col items-center p-2 rounded-xl transition-all duration-200 group-hover:bg-gradient-to-r group-hover:from-orange-500 group-hover:to-yellow-600 group-hover:text-white group-hover:shadow-md group-hover:scale-103">
+                                        <i
+                                            class="fas fa-tags text-lg mb-1 transition-transform duration-200 group-hover:scale-105"></i>
+                                        <span class="font-semibold text-xs">Categorias</span>
+                                    </div>
+                                </a>
+
+                                <a href="{{ route('questions.stats') }}"
+                                    class="nav-item group {{ Route::is('questions.stats') ? 'active' : '' }}">
+                                    <div
+                                        class="flex flex-col items-center p-2 rounded-xl transition-all duration-200 group-hover:bg-gradient-to-r group-hover:from-cyan-500 group-hover:to-blue-600 group-hover:text-white group-hover:shadow-md group-hover:scale-103">
+                                        <i
+                                            class="fas fa-chart-bar text-lg mb-1 transition-transform duration-200 group-hover:scale-105"></i>
+                                        <span class="font-semibold text-xs">Estatísticas</span>
+                                    </div>
+                                </a>
+
+                                <a href="{{ route('logout') }}" class="nav-item group">
+                                    <div
+                                        class="flex flex-col items-center p-2 rounded-xl transition-all duration-200 group-hover:bg-gradient-to-r group-hover:from-gray-600 group-hover:to-gray-800 group-hover:text-white group-hover:shadow-md group-hover:scale-103">
+                                        <i
+                                            class="fas fa-sign-out-alt text-lg mb-1 transition-transform duration-200 group-hover:scale-105"></i>
+                                        <span class="font-semibold text-xs">Sair</span>
+                                    </div>
+                                </a>
+                            @else
+                                <a href="{{ route('login') }}" class="nav-item group active">
+                                    <div
+                                        class="flex flex-col items-center p-2 rounded-xl transition-all duration-200 group-hover:bg-gradient-to-r group-hover:from-indigo-500 group-hover:to-purple-600 group-hover:text-white group-hover:shadow-md group-hover:scale-103">
+                                        <i
+                                            class="fas fa-sign-in-alt text-lg mb-1 transition-transform duration-200 group-hover:scale-105"></i>
+                                        <span class="font-semibold text-xs">Login</span>
+                                    </div>
+                                </a>
+
+                                <a href="{{ route('register') }}" class="nav-item group active">
+                                    <div
+                                        class="flex flex-col items-center p-2 rounded-xl transition-all duration-200 group-hover:bg-gradient-to-r group-hover:from-green-500 group-hover:to-teal-600 group-hover:text-white group-hover:shadow-md group-hover:scale-103">
+                                        <i
+                                            class="fas fa-user-plus text-lg mb-1 transition-transform duration-200 group-hover:scale-105"></i>
+                                        <span class="font-semibold text-xs">Registrar</span>
+                                    </div>
+                                </a>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </nav>
+
 
             <!-- Alertas modernizados -->
             @if (session('success'))
@@ -202,7 +240,7 @@
                 </div>
             @endif
 
-            
+
 
             @yield('content')
         </div>

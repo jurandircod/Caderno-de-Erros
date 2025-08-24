@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique(); // Ex: Direito Administrativo, Matemática
             $table->timestamps();
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
         });
 
         // Adiciona category_id na tabela questions

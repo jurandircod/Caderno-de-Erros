@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('correct_answer', 1);
             $table->unsignedInteger('correct_count')->default(0);
             $table->unsignedInteger('wrong_count')->default(0);
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
             $table->text('reason');
             $table->timestamps();
         });
