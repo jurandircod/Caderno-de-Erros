@@ -3,3 +3,4 @@ builder = "nixpacks"
 
 [deploy]
 startCommand = "php -S 0.0.0.0:$PORT -t public"
+buildCommand = "composer install --no-dev --optimize-autoloader && php artisan optimize:clear && php artisan optimize && chmod -R 775 storage bootstrap/cache && touch /tmp/database.sqlite"

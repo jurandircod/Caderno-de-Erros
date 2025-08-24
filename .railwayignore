@@ -1,0 +1,10 @@
+/.git
+/.github
+/node_modules
+/vendor
+/storage/*.key
+/.env
+/.idea
+/.vscode
+.DS_Store
+Thumbs.db
