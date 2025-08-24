@@ -128,7 +128,7 @@
 
                     <div class="grid grid-cols-2 gap-3">
                         <!-- Example social buttons (configure routes if needed) -->
-                        <a href="{{ route('login.provider', 'google') ?? '#' }}"
+                        <a href="{{ route('login.provider', 'google') }} }}"
                             class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-gray-200 hover:shadow-sm transition">
                             <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" class="w-4 h-4">
                             <span class="text-sm text-gray-700">Google</span>

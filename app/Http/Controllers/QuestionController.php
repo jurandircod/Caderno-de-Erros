@@ -9,7 +9,7 @@ use App\Models\Category;
 use App\Models\User;
 use Illuminate\Container\Attributes\Auth;
 use Illuminate\Support\Facades\Auth as FacadesAuth;
-Use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\NotificationController;
 
 class QuestionController extends Controller
 {
@@ -143,7 +143,14 @@ class QuestionController extends Controller
 
     public function stats(Request $request)
     {
-        $categories = Category::all();
+
+        $userId = FacadesAuth::check() ? FacadesAuth::id() : null;
+        if (!$userId) {
+            // Se o usuário não está autenticado, redireciona para a página de login
+            return NotificationController::redirectWithNotification('login', 'Você precisa estar logado para acessar o quiz.', 'error');
+        }
+
+        $categories = Category::where('user_id', $userId)->get();
         $selectedCategories = $request->input('categories', []);
 
         $mostWrong = Question::with('category')

@@ -103,92 +103,76 @@
             </header>
 
             <!-- Navigation modernizada -->
-            <nav class="mb-12 animate-fade-in-up" style="animation-delay: 0.2s">
+            <nav class="mb-8 animate-fade-in-up" style="animation-delay: 0.2s">
                 <div class="flex justify-center">
                     <div
-                        class="bg-white/80 backdrop-blur-lg rounded-3xl p-2 shadow-xl border border-white/20 max-w-4xl w-full">
-                        <div class="grid grid-cols-3 sm:grid-cols-5 gap-1">
+                        class="bg-white/80 backdrop-blur-lg rounded-3xl px-2 py-2 shadow-xl border border-white/20 max-w-3xl w-full overflow-x-auto">
+                        <div class="flex items-center justify-center gap-1 sm:gap-2">
                             @if (Auth::check())
                                 <a href="{{ route('quiz') }}"
-                                    class="nav-item group {{ Route::is('quiz') ? 'active' : '' }}">
-                                    <div
-                                        class="flex flex-col items-center p-2 rounded-xl transition-all duration-200 group-hover:bg-gradient-to-r group-hover:from-indigo-500 group-hover:to-purple-600 group-hover:text-white group-hover:shadow-md group-hover:scale-103">
-                                        <i
-                                            class="fas fa-brain text-lg mb-1 transition-transform duration-200 group-hover:scale-105"></i>
-                                        <span class="font-semibold text-xs">Estudar</span>
-                                    </div>
+                                    class="flex flex-col items-center justify-center p-2 sm:p-3 rounded-xl text-center transition-all duration-200 {{ Route::is('quiz') ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md scale-103' : 'hover:bg-gray-50' }}">
+                                    <i class="fas fa-brain text-base sm:text-lg mb-0.5"></i>
+                                    <span
+                                        class="font-semibold text-[10px] sm:text-xs mt-1 hidden sm:block">Estudar</span>
                                 </a>
 
                                 <a href="{{ route('questions.create') }}"
-                                    class="nav-item group {{ Route::is('questions.create') ? 'active' : '' }}">
-                                    <div
-                                        class="flex flex-col items-center p-2 rounded-xl transition-all duration-200 group-hover:bg-gradient-to-r group-hover:from-emerald-500 group-hover:to-teal-600 group-hover:text-white group-hover:shadow-md group-hover:scale-103">
-                                        <i
-                                            class="fas fa-plus-circle text-lg mb-1 transition-transform duration-200 group-hover:scale-105"></i>
-                                        <span class="font-semibold text-xs">Nova Questão</span>
-                                    </div>
+                                    class="flex flex-col items-center justify-center p-2 sm:p-3 rounded-xl text-center transition-all duration-200 {{ Route::is('questions.create') ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md scale-103' : 'hover:bg-gray-50' }}">
+                                    <i class="fas fa-plus-circle text-base sm:text-lg mb-0.5"></i>
+                                    <span class="font-semibold text-[10px] sm:text-xs mt-1 hidden sm:block">Nova
+                                        Questão</span>
                                 </a>
 
-                                <a href="{{ route('questions.delete') }}" class="nav-item group">
-                                    <div
-                                        class="flex flex-col items-center p-2 rounded-xl transition-all duration-200 group-hover:bg-gradient-to-r group-hover:from-red-500 group-hover:to-pink-600 group-hover:text-white group-hover:shadow-md group-hover:scale-103">
-                                        <i
-                                            class="fas fa-trash-alt text-lg mb-1 transition-transform duration-200 group-hover:scale-105"></i>
-                                        <span class="font-semibold text-xs">Excluir</span>
-                                    </div>
+                                <a href="{{ route('questions.delete') }}"
+                                    class="flex flex-col items-center justify-center p-2 sm:p-3 rounded-xl text-center transition-all duration-200 {{ Request::is('questions/delete') ? 'bg-gradient-to-r from-red-500 to-pink-600 text-white shadow-md scale-103' : 'hover:bg-gray-50' }}">
+                                    <i class="fas fa-trash-alt text-base sm:text-lg mb-0.5"></i>
+                                    <span
+                                        class="font-semibold text-[10px] sm:text-xs mt-1 hidden sm:block">Excluir</span>
                                 </a>
 
                                 <a href="{{ route('categories.index') }}"
-                                    class="nav-item group {{ Route::is('categories.index') ? 'active' : '' }}">
-                                    <div
-                                        class="flex flex-col items-center p-2 rounded-xl transition-all duration-200 group-hover:bg-gradient-to-r group-hover:from-orange-500 group-hover:to-yellow-600 group-hover:text-white group-hover:shadow-md group-hover:scale-103">
-                                        <i
-                                            class="fas fa-tags text-lg mb-1 transition-transform duration-200 group-hover:scale-105"></i>
-                                        <span class="font-semibold text-xs">Categorias</span>
-                                    </div>
+                                    class="flex flex-col items-center justify-center p-2 sm:p-3 rounded-xl text-center transition-all duration-200 {{ Route::is('categories.index') ? 'bg-gradient-to-r from-orange-500 to-yellow-400 text-white shadow-md scale-103' : 'hover:bg-gray-50' }}">
+                                    <i class="fas fa-tags text-base sm:text-lg mb-0.5"></i>
+                                    <span
+                                        class="font-semibold text-[10px] sm:text-xs mt-1 hidden sm:block">Categorias</span>
                                 </a>
 
                                 <a href="{{ route('questions.stats') }}"
-                                    class="nav-item group {{ Route::is('questions.stats') ? 'active' : '' }}">
-                                    <div
-                                        class="flex flex-col items-center p-2 rounded-xl transition-all duration-200 group-hover:bg-gradient-to-r group-hover:from-cyan-500 group-hover:to-blue-600 group-hover:text-white group-hover:shadow-md group-hover:scale-103">
-                                        <i
-                                            class="fas fa-chart-bar text-lg mb-1 transition-transform duration-200 group-hover:scale-105"></i>
-                                        <span class="font-semibold text-xs">Estatísticas</span>
-                                    </div>
+                                    class="flex flex-col items-center justify-center p-2 sm:p-3 rounded-xl text-center transition-all duration-200 {{ Route::is('questions.stats') ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md scale-103' : 'hover:bg-gray-50' }}">
+                                    <i class="fas fa-chart-bar text-base sm:text-lg mb-0.5"></i>
+                                    <span
+                                        class="font-semibold text-[10px] sm:text-xs mt-1 hidden sm:block">Estatísticas</span>
                                 </a>
 
-                                <a href="{{ route('logout') }}" class="nav-item group">
-                                    <div
-                                        class="flex flex-col items-center p-2 rounded-xl transition-all duration-200 group-hover:bg-gradient-to-r group-hover:from-gray-600 group-hover:to-gray-800 group-hover:text-white group-hover:shadow-md group-hover:scale-103">
-                                        <i
-                                            class="fas fa-sign-out-alt text-lg mb-1 transition-transform duration-200 group-hover:scale-105"></i>
-                                        <span class="font-semibold text-xs">Sair</span>
-                                    </div>
-                                </a>
+                                <!-- logout via POST form -->
+                                <form method="POST" action="{{ route('logout') }}" class="m-0 p-0">
+                                    @csrf
+                                    <button type="submit"
+                                        class="flex flex-col items-center justify-center p-2 sm:p-3 rounded-xl text-center transition-all duration-200 hover:bg-gray-50">
+                                        <i class="fas fa-sign-out-alt text-base sm:text-lg mb-0.5"></i>
+                                        <span
+                                            class="font-semibold text-[10px] sm:text-xs mt-1 hidden sm:block">Sair</span>
+                                    </button>
+                                </form>
                             @else
-                                <a href="{{ route('login') }}" class="nav-item group active">
-                                    <div
-                                        class="flex flex-col items-center p-2 rounded-xl transition-all duration-200 group-hover:bg-gradient-to-r group-hover:from-indigo-500 group-hover:to-purple-600 group-hover:text-white group-hover:shadow-md group-hover:scale-103">
-                                        <i
-                                            class="fas fa-sign-in-alt text-lg mb-1 transition-transform duration-200 group-hover:scale-105"></i>
-                                        <span class="font-semibold text-xs">Login</span>
-                                    </div>
+                                <a href="{{ route('login') }}"
+                                    class="flex flex-col items-center justify-center p-2 sm:p-3 rounded-xl text-center transition-all duration-200 {{ Route::is('login') ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md scale-103' : 'hover:bg-gray-50' }}">
+                                    <i class="fas fa-sign-in-alt text-base sm:text-lg mb-0.5"></i>
+                                    <span class="font-semibold text-[10px] sm:text-xs mt-1 hidden sm:block">Login</span>
                                 </a>
 
-                                <a href="{{ route('register') }}" class="nav-item group active">
-                                    <div
-                                        class="flex flex-col items-center p-2 rounded-xl transition-all duration-200 group-hover:bg-gradient-to-r group-hover:from-green-500 group-hover:to-teal-600 group-hover:text-white group-hover:shadow-md group-hover:scale-103">
-                                        <i
-                                            class="fas fa-user-plus text-lg mb-1 transition-transform duration-200 group-hover:scale-105"></i>
-                                        <span class="font-semibold text-xs">Registrar</span>
-                                    </div>
+                                <a href="{{ route('register') }}"
+                                    class="flex flex-col items-center justify-center p-2 sm:p-3 rounded-xl text-center transition-all duration-200 {{ Route::is('register') ? 'bg-gradient-to-r from-green-500 to-teal-600 text-white shadow-md scale-103' : 'hover:bg-gray-50' }}">
+                                    <i class="fas fa-user-plus text-base sm:text-lg mb-0.5"></i>
+                                    <span
+                                        class="font-semibold text-[10px] sm:text-xs mt-1 hidden sm:block">Registrar</span>
                                 </a>
                             @endif
                         </div>
                     </div>
                 </div>
             </nav>
+            >
 
 
             <!-- Alertas modernizados -->

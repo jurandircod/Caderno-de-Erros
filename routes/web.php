@@ -48,5 +48,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout'); // suporte GET para logout via link
 
 // Social (placeholders para os botões Google / GitHub)
+Route::get('auth/google', [AuthController::class, 'redirectToProvider'])->name('google.redirect');
+Route::get('auth/google/callback', [AuthController::class, 'handleProviderCallback'])->name('google.callback');
+
 Route::get('/auth/{provider}', [AuthController::class, 'redirectToProvider'])->name('login.provider');
 Route::get('/auth/{provider}/callback', [AuthController::class, 'handleProviderCallback'])->name('login.provider.callback');
+
+

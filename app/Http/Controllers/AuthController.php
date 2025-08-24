@@ -7,9 +7,47 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Laravel\Socialite\Facades\Socialite;
+use Exception;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
+
+    /**
+     * Redirecionar para provedor (Google)
+     */
+    public function redirectToProvider()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function handleProviderCallback()
+    {
+        try {
+            $socialUser = Socialite::driver('google')->user();
+
+            $user = User::where('email', $socialUser->getEmail())->first();
+
+            if (!$user) {
+                $user = User::create([
+                    'name' => $socialUser->getName() ?? $socialUser->getNickname(),
+                    'email' => $socialUser->getEmail(),
+                    'password' => bcrypt(Str::random(16)),
+                ]);
+            }
+
+            Auth::login($user);
+
+            return redirect()->intended('/');
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            return redirect('/login')->with('error', 'Erro ao tentar logar via Google.');
+        }
+    }
+
+
     /**
      * Mostrar o formulário de login
      */
@@ -24,7 +62,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => ['required','email'],
+            'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
@@ -35,11 +73,11 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             return redirect()->intended(route('quiz'))
-                             ->with('success', 'Login realizado com sucesso.');
+                ->with('success', 'Login realizado com sucesso.');
         }
 
         return back()->withInput($request->only('email', 'remember'))
-                     ->withErrors(['email' => 'As credenciais fornecidas não correspondem aos nossos registros.']);
+            ->withErrors(['email' => 'As credenciais fornecidas não correspondem aos nossos registros.']);
     }
 
     /**
@@ -56,9 +94,9 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $data = $request->validate([
-            'name' => ['required','string','max:255'],
-            'email' => ['required','email','max:255', Rule::unique('users','email')],
-            'password' => ['required','string','min:8','confirmed'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
         $user = User::create([
@@ -83,26 +121,5 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('login')->with('status', 'Você saiu da sua conta.');
-    }
-
-    /**
-     * Redirecionar para provedor social (placeholder).
-     * Você pode implementar Socialite aqui se quiser.
-     */
-    public function redirectToProvider($provider)
-    {
-        // Exemplo: se quiser usar Laravel Socialite, aqui redireciona:
-        // return Socialite::driver($provider)->redirect();
-
-        return redirect()->route('login')->with('error', "Login via {$provider} não está configurado.");
-    }
-
-    /**
-     * Callback do provedor social (placeholder).
-     */
-    public function handleProviderCallback($provider)
-    {
-        // Aqui você trataria o callback do provedor via Socialite
-        return redirect()->route('login')->with('error', "Callback do {$provider} não implementado.");
     }
 }
