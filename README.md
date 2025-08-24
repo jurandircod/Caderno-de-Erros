@@ -1,61 +1,171 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📚 Caderno de Erros
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Sistema Inteligente de Estudos com Questões
 
-## About Laravel
+O **Caderno de Erros** é uma aplicação web desenvolvida em Laravel que permite criar, gerenciar e estudar questões de múltipla escolha de forma inteligente, com foco nas questões que você mais erra.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+![Tela Inicial](screenshots/tela-inicial.png)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## ✨ Funcionalidades
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 🎯 Quiz Inteligente
+- Sistema de quiz com questões de múltipla escolha (A, B, C, D)
+- Filtro por categorias para estudo direcionado
+- Feedback imediato após responder
+- Explicações detalhadas para cada questão
+- Interface responsiva e intuitiva
 
-## Learning Laravel
+![Quiz Interface](screenshots/quiz-interface.png)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 📝 Criação de Questões
+- Interface simplificada para criação de questões
+- **Funcionalidade especial**: Cole a questão inteira com as opções A), B), C), D) e o sistema separa automaticamente
+- Associação com categorias
+- Campo para explicação da resposta correta
+- Validação de dados
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+![Criar Questão](screenshots/criar-questao.png)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 🗂️ Gerenciamento
+- **Excluir Questões**: Interface para remoção de questões desnecessárias
+- **Categorias**: Sistema completo de categorização com CRUD
+- Organização eficiente do conteúdo
 
-## Laravel Sponsors
+![Excluir Questões](screenshots/excluir-questoes.png)
+![Gerenciar Categorias](screenshots/gerenciar-categorias.png)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 📊 Estatísticas Inteligentes
+- Questões mais erradas (para focar no estudo)
+- Questões mais acertadas
+- Filtros por categoria
+- Contadores de acertos e erros
+- Interface visual com badges coloridos
 
-### Premium Partners
+## 🚀 Tecnologias Utilizadas
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- **Framework**: Laravel (PHP)
+- **Frontend**: Bootstrap 5
+- **JavaScript**: Vanilla JS
+- **Icons**: Font Awesome
+- **Database**: MySQL/PostgreSQL (compatível)
 
-## Contributing
+## 📋 Pré-requisitos
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- PHP 8.0+
+- Composer
+- MySQL ou PostgreSQL
+- Node.js (para assets)
 
-## Code of Conduct
+## 🛠️ Instalação
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1. **Clone o repositório**
+```bash
+git clone https://github.com/seu-usuario/caderno-de-erros.git
+cd caderno-de-erros
+```
 
-## Security Vulnerabilities
+2. **Instale as dependências**
+```bash
+composer install
+npm install
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+3. **Configure o ambiente**
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-## License
+4. **Configure o banco de dados**
+Edite o arquivo `.env` com suas configurações:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=caderno_erros
+DB_USERNAME=seu_usuario
+DB_PASSWORD=sua_senha
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+5. **Execute as migrações**
+```bash
+php artisan migrate
+```
+
+6. **Compile os assets**
+```bash
+npm run dev
+```
+
+7. **Inicie o servidor**
+```bash
+php artisan serve
+```
+
+Acesse `http://localhost:8000`
+
+## 🗃️ Estrutura do Banco de Dados
+
+### Tabelas Principais
+
+- **questions**: Armazena as questões
+  - `id`, `question_text`, `options` (JSON), `correct_answer`, `reason`, `category_id`
+  - `correct_count`, `wrong_count` (para estatísticas)
+
+- **categories**: Categorias das questões
+  - `id`, `name`, `created_at`, `updated_at`
+
+- **user_answers**: Histórico de respostas (se implementado)
+  - Para tracking de progresso individual
+
+## 🎨 Funcionalidades Especiais
+
+### 📋 Auto-parse de Questões
+Ao criar uma nova questão, você pode colar o texto completo no formato:
+```
+Qual é a capital do Brasil?
+A) Rio de Janeiro
+B) São Paulo
+C) Brasília
+D) Belo Horizonte
+```
+
+O sistema automaticamente separa:
+- O enunciado da questão
+- As opções A, B, C e D nos campos correspondentes
+
+### 🧠 Sistema Inteligente
+- Prioriza questões com mais erros
+- Estatísticas detalhadas por categoria
+- Interface focada na experiência do usuário
+
+## 🔧 Rotas Principais
+
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| GET | `/quiz` | Interface do quiz |
+| POST | `/quiz/check` | Verificar resposta |
+| GET | `/questions/create` | Criar questão |
+| POST | `/questions` | Salvar questão |
+| GET | `/statistics` | Ver estatísticas |
+| GET | `/categories` | Gerenciar categorias |
+
+## 🤝 Contribuição
+
+1. Fork o projeto
+2. Crie uma branch (`git checkout -b feature/nova-funcionalidade`)
+3. Commit suas mudanças (`git commit -am 'Adiciona nova funcionalidade'`)
+4. Push para a branch (`git push origin feature/nova-funcionalidade`)
+5. Abra um Pull Request
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para detalhes.
+
+## 📧 Contato
+
+Para dúvidas ou sugestões, abra uma issue no GitHub.
+
+---
+
+**Desenvolvido com ❤️ para facilitar seus estudos!**

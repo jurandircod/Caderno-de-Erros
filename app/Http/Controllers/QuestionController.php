@@ -27,7 +27,7 @@ class QuestionController extends Controller
             'category_id' => 'required|exists:categories,id', // 🔹 nova validação
         ]);
 
-        Question::create([
+        $question = Question::create([
             'question_text' => $request->question_text,
             'options' => [
                 'a' => $request->option_a,
@@ -39,7 +39,6 @@ class QuestionController extends Controller
             'reason' => $request->reason,
             'category_id' => $request->category_id, // 🔹 salva categoria
         ]);
-
         return redirect()->back()->with('success', 'Questão criada com sucesso!');
     }
 
@@ -117,11 +116,23 @@ class QuestionController extends Controller
         return response()->json($question);
     }
 
-    public function stats()
+    public function stats(Request $request)
     {
-        $mostWrong = Question::orderByDesc('wrong_count')->take(10)->get();
-        $mostCorrect = Question::orderByDesc('correct_count')->take(10)->get();
+        $categories = Category::all();
+        $selectedCategories = $request->input('categories', []);
 
-        return view('questions.stats', compact('mostWrong', 'mostCorrect'));
+        $mostWrong = Question::with('category')
+            ->when($selectedCategories, fn($q) => $q->whereIn('category_id', $selectedCategories))
+            ->where('wrong_count', '>', 0)
+            ->orderByDesc('wrong_count')
+            ->get();
+
+        $mostCorrect = Question::with('category')
+            ->when($selectedCategories, fn($q) => $q->whereIn('category_id', $selectedCategories))
+            ->where('correct_count', '>', 0)
+            ->orderByDesc('correct_count')
+            ->get();
+
+        return view('questions.stats', compact('mostWrong', 'mostCorrect', 'categories', 'selectedCategories'));
     }
 }

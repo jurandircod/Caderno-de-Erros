@@ -13,7 +13,8 @@ class Question extends Model
         'question_text',
         'options',
         'correct_answer',
-        'reason'
+        'reason',
+        'category_id' // 🔹 nova coluna para categoria
     ];
 
     protected $casts = [
