@@ -4,7 +4,7 @@
 
 O **Caderno de Erros** é uma aplicação web desenvolvida em Laravel que permite criar, gerenciar e estudar questões de múltipla escolha de forma inteligente, com foco nas questões que você mais erra.
 
-![Tela Inicial](C:\Users\JURANDIR\Pictures\Screenshots\Captura de tela 2025-08-23 221827.png)
+![Tela Inicial]("C:\Users\JURANDIR\Pictures\Screenshots\Captura de tela 2025-08-23 221827.png")
 
 ## ✨ Funcionalidades
 
