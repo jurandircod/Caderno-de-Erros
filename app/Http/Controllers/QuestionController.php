@@ -156,12 +156,14 @@ class QuestionController extends Controller
         $mostWrong = Question::with('category')
             ->when($selectedCategories, fn($q) => $q->whereIn('category_id', $selectedCategories))
             ->where('wrong_count', '>', 0)
+            ->where('user_id', $userId)
             ->orderByDesc('wrong_count')
             ->get();
 
         $mostCorrect = Question::with('category')
             ->when($selectedCategories, fn($q) => $q->whereIn('category_id', $selectedCategories))
             ->where('correct_count', '>', 0)
+            ->where('user_id', $userId)
             ->orderByDesc('correct_count')
             ->get();
 
