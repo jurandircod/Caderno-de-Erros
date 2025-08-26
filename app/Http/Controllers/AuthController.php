@@ -15,6 +15,11 @@ use Illuminate\Support\Facades\Log;
 class AuthController extends Controller
 {
 
+
+    public function __construct()
+    {
+        session()->start(); // Garante que a sessão está iniciada
+    }
     /**
      * Redirecionar para provedor (Google)
      */
@@ -26,8 +31,7 @@ class AuthController extends Controller
     public function handleProviderCallback()
     {
         try {
-            $socialUser = Socialite::driver('google')->user();
-
+            $socialUser = Socialite::driver('google')->stateless()->user();
             $user = User::where('email', $socialUser->getEmail())->first();
 
             if (!$user) {
@@ -41,9 +45,9 @@ class AuthController extends Controller
             Auth::login($user);
 
             return redirect()->intended('/');
-        } catch (\Exception $e) {
-            dd($e->getMessage());
-            return redirect('/login')->with('error', 'Erro ao tentar logar via Google.');
+        } catch (Exception $e) {
+            Log::error('Full error: ' . $e->getMessage());
+            return redirect('/login')->with('error', 'Erro de autenticação.');
         }
     }
 

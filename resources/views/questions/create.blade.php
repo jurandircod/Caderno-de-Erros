@@ -269,7 +269,6 @@
         }
     </style>
 @endsection
-
 @section('scripts')
     <script>
         document.getElementById("question_text").addEventListener("paste", function(e) {
@@ -277,8 +276,8 @@
             setTimeout(() => {
                 let text = e.target.value;
 
-                // Regex para separar enunciado e opções
-                let regex = /(.*?)\s*A\)(.*?)\s*B\)(.*?)\s*C\)(.*?)\s*D\)(.*)/s;
+                // Regex atualizado: aceita A) ou A. (maiúsculo ou minúsculo)
+                let regex = /(.*?)\s*[Aa][\)\.](.*?)\s*[Bb][\)\.](.*?)\s*[Cc][\)\.](.*?)\s*[Dd][\)\.](.*)/s;
                 let match = text.match(regex);
 
                 if (match) {

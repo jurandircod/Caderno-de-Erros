@@ -150,7 +150,6 @@
 </div>
 
 <style>
-/* animações e estilos customizados já estavam ok, mantive igual ao seu */
 </style>
 @endsection
 

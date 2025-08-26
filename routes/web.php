@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth')->group(function () {
-
     //questions
     Route::get('/', [QuestionController::class, 'quiz'])->name('quiz');
     Route::get('/quiz', [QuestionController::class, 'quiz'])->name('quiz');
