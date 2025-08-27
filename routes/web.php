@@ -4,6 +4,7 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AuthController; // <-- ADICIONE
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\QuizController;
 
 /*
 |-----------------------------------------------------------------------
@@ -22,13 +23,27 @@ Route::middleware('auth')->group(function () {
     Route::post('/questions', [QuestionController::class, 'store'])->name('questions.store');
     Route::delete('/questions/{id}', [QuestionController::class, 'destroy'])->name('questions.destroy');
     //categories
-    Route::prefix('categories')->group(function () {
-        Route::get('/', [CategoryController::class, 'index'])->name('categories.index');
-        Route::post('/', [CategoryController::class, 'store'])->name('categories.store');
-        Route::delete('/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
-    });
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+    Route::patch('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+
+    // questions (já existem store/destroy etc. adicionamos update)
+    Route::patch('/questions/{question}', [\App\Http\Controllers\QuestionController::class, 'update'])->name('questions.update');
     Route::get('/questions/stats', [QuestionController::class, 'stats'])->name('questions.stats');
+
+    Route::get('/quiz', [\App\Http\Controllers\QuestionController::class, 'quiz'])->name('quiz');
+
+    Route::get('/quiz/simulado', [QuizController::class, 'simulado'])->name('quiz.simulado');
+    Route::post('/quiz/simulado/corrigir', [QuizController::class, 'corrigirSimulado'])->name('quiz.simulado.corrigir');
+
+    // rota para refazer com mesmos filtros (pode apenas redirecionar para simulado)
+    Route::get('/quiz/simulado/refazer/{simulado}', [QuizController::class, 'refazer'])->name('quiz.simulado.refazer');
+
+    // exportar erradas (CSV) de uma tentativa
+    Route::get('/quiz/simulado/{simulado}/export-erros', [QuizController::class, 'exportErradas'])->name('quiz.simulado.export');
 });
+
 
 
 
@@ -52,5 +67,3 @@ Route::get('auth/google/callback', [AuthController::class, 'handleProviderCallba
 
 Route::get('/auth/{provider}', [AuthController::class, 'redirectToProvider'])->name('login.provider');
 Route::get('/auth/{provider}/callback', [AuthController::class, 'handleProviderCallback'])->name('login.provider.callback');
-
-

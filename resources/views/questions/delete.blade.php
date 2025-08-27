@@ -33,93 +33,169 @@
                     @foreach ($questions as $question)
                         <div
                             class="flex items-center justify-between gap-4 p-4 rounded-2xl border border-gray-100 hover:shadow-md transition">
-                            <div class="flex items-start gap-4">
-                                <div
-                                    class="w-12 h-12 rounded-lg bg-gradient-to-r from-indigo-50 to-purple-50 flex items-center justify-center">
-                                    <i class="fas fa-question text-indigo-600"></i>
+                            <!-- ... resumo da questão ... -->
+                            <div
+                                class="flex items-center justify-between gap-4 p-4 rounded-2xl border border-gray-100 hover:shadow-md transition">
+                                <div class="flex items-start gap-4">
+                                    <div
+                                        class="w-12 h-12 rounded-lg bg-gradient-to-r from-indigo-50 to-purple-50 flex items-center justify-center">
+                                        <i class="fas fa-question text-indigo-600"></i>
+                                    </div>
+
+                                    <div>
+                                        <p class="text-gray-800 font-semibold leading-relaxed">
+                                            {{ Str::limit($question->question_text, 180) }}
+                                        </p>
+
+                                        <p class="text-sm text-gray-500 mt-1">
+                                            {{ $question->category->name ?? 'Sem categoria' }} • ID #{{ $question->id }}
+                                            <span class="ml-3">• Acertos:
+                                                <strong>{{ $question->correct_count }}</strong></span>
+                                            <span class="ml-2">• Erros:
+                                                <strong>{{ $question->wrong_count }}</strong></span>
+                                        </p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p class="text-gray-800 font-semibold leading-relaxed">
-                                        {{ Str::limit($question->question_text, 140) }}</p>
-                                    <p class="text-sm text-gray-500 mt-1">
-                                        {{ $question->category->name ?? 'Sem categoria' }} • ID #{{ $question->id }}
-                                    </p>
+
+                                <div class="flex items-center gap-3">
+                                    <a href="javascript:void(0)"
+                                        class="open-modal inline-flex items-center gap-2 px-4 py-2 bg-white border rounded-xl shadow-sm hover:shadow-md transition text-indigo-600"
+                                        data-modal-target="modal-edit-{{ $question->id }}">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </a>
+
+                                    <button type="button"
+                                        class="open-modal inline-flex items-center gap-2 px-4 py-2 rounded-xl font-semibold shadow-md transform hover:scale-[1.02] transition bg-gradient-to-r from-red-500 to-pink-600 text-white"
+                                        data-modal-target="modal-delete-{{ $question->id }}">
+                                        <i class="fas fa-trash"></i>
+                                        Excluir
+                                    </button>
                                 </div>
                             </div>
 
-                            <div class="flex items-center gap-3">
-                                <a href=""
-                                    class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-indigo-200 rounded-xl shadow-sm hover:shadow-md transition text-indigo-600">
-                                    <i class="fas fa-edit"></i>
-                                    Editar
-                                </a>
-
-                                <!-- botão abre modal -->
-                                <button type="button"
-                                    class="open-modal inline-flex items-center gap-2 px-4 py-2 rounded-xl font-semibold shadow-md transform hover:scale-[1.02] transition
-                                           bg-gradient-to-r from-red-500 to-pink-600 text-white"
-                                    data-modal-target="modal-delete-{{ $question->id }}">
-                                    <i class="fas fa-trash"></i>
-                                    Excluir
-                                </button>
-                            </div>
                         </div>
 
-                        <!-- Modal (hidden por padrão) -->
-                        <div id="modal-delete-{{ $question->id }}"
-                            class="modal fixed inset-0 z-50 hidden items-center justify-center px-4">
-                            <!-- backdrop -->
-                            <div class="modal-backdrop absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+                        <!-- Modal Delete (mesma sua estrutura) -->
+                        <!-- ... modal-delete-{{ $question->id }} ... -->
 
-                            <!-- modal content -->
-                            <div class="relative w-full max-w-2xl mx-auto">
+                        <!-- Edit Modal -->
+                        <!-- START: Edit Modal (substitua o bloco antigo) -->
+                         <div id="modal-edit-{{ $question->id }}" class="modal inset-0 hidden z-[9999]">
+                            <!-- Backdrop -->
+                            <div class="modal-backdrop absolute inset-0 bg-black/60"></div>
+
+                            <!-- Dialog (centro da viewport) -->
+                            <div class="modal-wrapper fixed inset-0 flex items-center justify-center px-4">
                                 <div
-                                    class="bg-white rounded-2xl overflow-hidden shadow-2xl transform transition-all duration-300 translate-y-4 opacity-0 scale-95">
+                                    class="modal-dialog relative w-full max-w-4xl max-h-[90vh] bg-white rounded-3xl shadow-2xl overflow-hidden transform transition-all">
+                                    <!-- Cabeçalho (sticky) -->
                                     <div
-                                        class="p-6 bg-gradient-to-r from-red-500 to-pink-600 text-white flex items-center justify-between">
+                                        class="modal-header p-6 bg-gradient-to-r from-indigo-500 to-purple-600 text-white flex items-center justify-between sticky top-0 z-10">
                                         <div class="flex items-center gap-4">
                                             <div class="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
-                                                <i class="fas fa-exclamation-triangle text-white"></i>
+                                                <i class="fas fa-edit text-white"></i>
                                             </div>
                                             <div>
-                                                <h3 class="text-xl font-bold">Confirmar Exclusão</h3>
-                                                <p class="text-sm opacity-90">Essa ação não pode ser desfeita.</p>
+                                                <h3 class="text-xl font-bold">Editar Questão</h3>
+                                                <p class="text-sm opacity-90">Altere o enunciado, opções, categoria e
+                                                    resposta correta.</p>
                                             </div>
                                         </div>
-                                        <button type="button"
-                                            class="close-modal text-white text-xl font-bold px-3 py-1 rounded-md"
+
+                                        <button type="button" class="close-modal text-white text-2xl font-bold px-3 py-1"
                                             aria-label="Fechar">&times;</button>
                                     </div>
 
-                                    <div class="p-6 bg-white">
-                                        <p class="text-gray-700 mb-4">Tem certeza que deseja excluir a seguinte questão?</p>
-                                        <div class="p-4 bg-gray-50 border border-gray-100 rounded-lg mb-6">
-                                            <p class="text-gray-800 font-semibold">{{ $question->question_text }}</p>
-                                            <p class="text-sm text-gray-500 mt-2">
-                                                {{ $question->category->name ?? 'Sem categoria' }} • ID #{{ $question->id }}
-                                            </p>
-                                        </div>
+                                    <!-- Corpo (scroll interno) -->
+                                    <div class="modal-body p-6 overflow-y-auto" style="max-height:calc(90vh - 120px);">
+                                        <form action="{{ route('questions.update', $question->id) }}" method="POST">
+                                            @csrf
+                                            @method('PATCH')
 
-                                        <div class="flex items-center justify-end gap-3">
-                                            <button type="button"
-                                                class="close-modal px-5 py-3 bg-white border border-gray-200 rounded-lg hover:shadow-sm transition">Cancelar</button>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Texto da Questão</label>
+                                                <textarea name="question_text" rows="3" class="w-full px-4 py-3 border rounded-lg">{{ old('question_text', $question->question_text) }}</textarea>
+                                            </div>
 
-                                            <form action="{{ route('questions.destroy', $question->id) }}" method="POST"
-                                                class="inline">
-                                                @csrf
-                                                @method('DELETE')
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                                                <div>
+                                                    <label class="form-label fw-bold">Opção A</label>
+                                                    <input type="text" name="option_a"
+                                                        value="{{ old('option_a', $question->options['a'] ?? '') }}"
+                                                        class="w-full px-4 py-3 border rounded-lg">
+                                                </div>
+                                                <div>
+                                                    <label class="form-label fw-bold">Opção B</label>
+                                                    <input type="text" name="option_b"
+                                                        value="{{ old('option_b', $question->options['b'] ?? '') }}"
+                                                        class="w-full px-4 py-3 border rounded-lg">
+                                                </div>
+                                                <div>
+                                                    <label class="form-label fw-bold">Opção C</label>
+                                                    <input type="text" name="option_c"
+                                                        value="{{ old('option_c', $question->options['c'] ?? '') }}"
+                                                        class="w-full px-4 py-3 border rounded-lg">
+                                                </div>
+                                                <div>
+                                                    <label class="form-label fw-bold">Opção D</label>
+                                                    <input type="text" name="option_d"
+                                                        value="{{ old('option_d', $question->options['d'] ?? '') }}"
+                                                        class="w-full px-4 py-3 border rounded-lg">
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Categoria</label>
+                                                <select name="category_id" class="w-full px-4 py-3 border rounded-lg">
+                                                    <option value="">-- Sem categoria --</option>
+                                                    @foreach ($categories as $cat)
+                                                        <option value="{{ $cat->id }}"
+                                                            {{ $question->category_id == $cat->id ? 'selected' : '' }}>
+                                                            {{ $cat->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Resposta Correta</label>
+                                                <select name="correct_answer" class="w-full px-4 py-3 border rounded-lg">
+                                                    <option value="a"
+                                                        {{ $question->correct_answer === 'a' ? 'selected' : '' }}>Opção A
+                                                    </option>
+                                                    <option value="b"
+                                                        {{ $question->correct_answer === 'b' ? 'selected' : '' }}>Opção B
+                                                    </option>
+                                                    <option value="c"
+                                                        {{ $question->correct_answer === 'c' ? 'selected' : '' }}>Opção C
+                                                    </option>
+                                                    <option value="d"
+                                                        {{ $question->correct_answer === 'd' ? 'selected' : '' }}>Opção D
+                                                    </option>
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-4">
+                                                <label class="form-label fw-bold">Explicação</label>
+                                                <textarea name="reason" rows="3" class="w-full px-4 py-3 border rounded-lg">{{ old('reason', $question->reason) }}</textarea>
+                                            </div>
+
+                                            <!-- Footer (fixo/visível) -->
+                                            <div
+                                                class="modal-footer sticky bottom-0 bg-white p-4 flex items-center justify-end gap-3 border-t">
+                                                <button type="button"
+                                                    class="close-modal px-4 py-2 border rounded-lg">Cancelar</button>
                                                 <button type="submit"
-                                                    class="px-5 py-3 rounded-lg text-white font-semibold bg-gradient-to-r from-red-600 to-pink-600 hover:opacity-95 transition-shadow shadow">
-                                                    <i class="fas fa-trash-alt mr-2"></i> Excluir permanentemente
-                                                </button>
-                                            </form>
-                                        </div>
+                                                    class="px-5 py-3 rounded-lg bg-indigo-600 text-white">Salvar
+                                                    Alterações</button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- /Modal -->
+                        <!-- END: Edit Modal -->
                     @endforeach
+
                 </div>
 
                 <div class="mt-8 text-center">
@@ -134,25 +210,78 @@
     </div>
 
     <style>
-        /* Modal helpers: controlam a animação (mantenha compatível com Tailwind) */
+        /* Base modal */
+        .modal.hidden {
+            display: none;
+        }
+
         .modal {
-            /* flex utilities aplicadas inline via classe; manter hidden por padrão */
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* elemento interno que será animado (a div .relative > .bg-white) */
-        .modal .relative>div {
-            transform-origin: center top;
+        /* wrapper/dialog */
+        .modal-wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            box-sizing: border-box;
         }
 
-        /* quando a modal fica visível, removemos hidden e adicionamos classes via JS */
-        .modal.show>.relative>div {
-            opacity: 1 !important;
-            transform: translateY(0) scale(1) !important;
+        /* animação do diálogo */
+        .modal-dialog {
+            transform: translateY(8px) scale(.98);
+            opacity: 0;
+            transition: all 200ms ease;
         }
 
-        /* inicial (fechado) — o JS aplica/removerá a classe .show */
-        .modal .relative>div[style] {
-            /* inline styles are managed by JS for height control if necessary */
+        /* quando aberto */
+        .modal.is-open .modal-dialog {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        /* dialog visual (use as suas classes tailwind já existentes ou adapte) */
+        .modal-dialog {
+            width: 100%;
+            max-width: 64rem;
+            /* max-w-4xl */
+            max-height: 90vh;
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        /* corpo do modal rolável */
+        .modal-body {
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 1.25rem;
+            /* p-6 */
+            max-height: calc(90vh - 120px);
+            /* espaço para header/footer sticky */
+        }
+
+        /* header/footer sticky */
+        .modal-header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .modal-footer {
+            position: sticky;
+            bottom: 0;
+            z-index: 10;
+            background: #fff;
         }
     </style>
 @endsection
@@ -161,88 +290,59 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const openButtons = document.querySelectorAll('.open-modal');
-            const closeSelectors = '.close-modal, .modal-backdrop';
+            const closeSelectors = ['.close-modal', '.modal-backdrop'];
 
             function openModal(modal) {
                 if (!modal) return;
-                // mostrar modal
+                if (modal.classList.contains('is-open')) return;
                 modal.classList.remove('hidden');
-                // forçar reflow para permitir animação via classes inline
-                const inner = modal.querySelector('.relative > div');
-                // aplicar animação inicial
-                inner.style.opacity = '0';
-                inner.style.transform = 'translateY(12px) scale(.98)';
-                // bloquear scroll da página
-                document.documentElement.classList.add('overflow-hidden');
-                setTimeout(() => {
-                    modal.classList.add('show');
-                    inner.style.transition = 'all 220ms ease-out';
-                    inner.style.opacity = '1';
-                    inner.style.transform = 'translateY(0) scale(1)';
-                }, 10);
-
-                // foco no primeiro botão (acessibilidade)
-                const cancelBtn = modal.querySelector('.close-modal');
-                if (cancelBtn) cancelBtn.focus();
+                // força reflow pra animação
+                void modal.offsetWidth;
+                modal.classList.add('is-open');
+                // foco acessível
+                const focusable = modal.querySelector(
+                    'input, textarea, select, button, [tabindex]:not([tabindex="-1"])');
+                if (focusable) focusable.focus({
+                    preventScroll: true
+                });
             }
 
             function closeModal(modal) {
                 if (!modal) return;
-                const inner = modal.querySelector('.relative > div');
-                // animação fechamento
-                inner.style.transition = 'all 180ms ease-in';
-                inner.style.opacity = '0';
-                inner.style.transform = 'translateY(8px) scale(.98)';
-                // remover classe show após animação
+                modal.classList.remove('is-open');
                 setTimeout(() => {
-                    modal.classList.remove('show');
                     modal.classList.add('hidden');
-                    // limpar inline styles
-                    inner.style.opacity = '';
-                    inner.style.transform = '';
-                    inner.style.transition = '';
-                    document.documentElement.classList.remove('overflow-hidden');
-                }, 190);
+                }, 220); // esperar animação
             }
 
-            // abrir modal ao clicar no botão
             openButtons.forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    const targetId = this.getAttribute('data-modal-target');
+                btn.addEventListener('click', (e) => {
+                    const targetId = btn.getAttribute('data-modal-target');
                     if (!targetId) return;
                     const modal = document.getElementById(targetId);
                     openModal(modal);
                 });
             });
 
-            // delegação para fechar (botão fechar e clique no backdrop)
-            document.addEventListener('click', function(e) {
-                // fechar via botão/link
-                if (e.target.closest('.close-modal')) {
-                    const modal = e.target.closest('.modal');
-                    closeModal(modal);
-                    return;
-                }
-
-                // fechar via backdrop
-                if (e.target.classList && e.target.classList.contains('modal-backdrop')) {
-                    const modal = e.target.closest('.modal');
-                    closeModal(modal);
-                    return;
+            document.addEventListener('click', (e) => {
+                const close = e.target.closest(closeSelectors.join(','));
+                if (close) {
+                    const modal = close.closest('.modal');
+                    if (modal) closeModal(modal);
                 }
             });
 
-            // ESC para fechar última modal aberta
-            document.addEventListener('keydown', function(e) {
+            document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape' || e.key === 'Esc') {
-                    const openModalEl = document.querySelector('.modal:not(.hidden)');
+                    const openModalEl = document.querySelector('.modal.is-open');
                     if (openModalEl) closeModal(openModalEl);
                 }
             });
 
-            // prevenir submit acidental por Enter ao focar em botões (opcional)
-            document.querySelectorAll('button').forEach(b => b.setAttribute('type', b.getAttribute('type') ||
-                'button'));
+            // define tipo padrão para botões dentro de modais (evita submits acidentais)
+            document.querySelectorAll('.modal button').forEach(b => {
+                if (!b.hasAttribute('type')) b.setAttribute('type', 'button');
+            });
         });
     </script>
-@endsection
+@show

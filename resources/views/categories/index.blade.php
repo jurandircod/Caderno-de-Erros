@@ -23,33 +23,30 @@
             </div>
             <h3 class="text-xl font-bold text-gray-800">Nova Categoria</h3>
         </div>
-        
+
         <form action="{{ route('categories.store') }}" method="POST" class="space-y-6">
             @csrf
             <div class="relative">
                 <label for="name" class="block text-sm font-bold text-gray-700 mb-3">Nome da Categoria</label>
                 <div class="relative">
-                    <input type="text" 
-                           name="name" 
-                           id="name" 
-                           class="w-full px-6 py-4 bg-white border-2 border-orange-200 rounded-2xl focus:border-orange-500 focus:ring-4 focus:ring-orange-100 transition-all duration-300 text-gray-800 placeholder-gray-400 font-medium text-lg shadow-sm hover:shadow-md"
-                           placeholder="Digite o nome da categoria..."
-                           required>
+                    <input type="text" name="name" id="name" required
+                        class="w-full px-6 py-4 bg-white border-2 border-orange-200 rounded-2xl focus:border-orange-500 focus:ring-4 focus:ring-orange-100 transition-all duration-300 text-gray-800 placeholder-gray-400 font-medium text-lg shadow-sm hover:shadow-md"
+                        placeholder="Digite o nome da categoria...">
                     <div class="absolute inset-y-0 right-0 flex items-center pr-6">
                         <i class="fas fa-tag text-orange-400 text-lg"></i>
                     </div>
                 </div>
                 @error('name')
-                    <div class="mt-3 p-3 bg-red-50 border border-red-200 rounded-xl">
-                        <div class="text-red-600 text-sm font-semibold flex items-center">
-                            <i class="fas fa-exclamation-circle mr-2"></i>
-                            {{ $message }}
-                        </div>
+                <div class="mt-3 p-3 bg-red-50 border border-red-200 rounded-xl">
+                    <div class="text-red-600 text-sm font-semibold flex items-center">
+                        <i class="fas fa-exclamation-circle mr-2"></i>
+                        {{ $message }}
                     </div>
+                </div>
                 @enderror
             </div>
-            <button type="submit" 
-                    class="px-8 py-4 bg-gradient-to-r from-orange-500 to-yellow-600 text-white rounded-2xl font-bold text-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center space-x-3 shadow-lg">
+            <button type="submit"
+                class="px-8 py-4 bg-gradient-to-r from-orange-500 to-yellow-600 text-white rounded-2xl font-bold text-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center space-x-3 shadow-lg">
                 <i class="fas fa-plus"></i>
                 <span>Adicionar Categoria</span>
             </button>
@@ -64,40 +61,60 @@
                 Categorias Cadastradas
             </h3>
         </div>
-        
+
         <div class="p-8">
             @forelse ($categories as $category)
-                <div class="bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 mb-6 last:mb-0 hover:scale-[1.02] group">
-                    <div class="p-6">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-4">
-                                <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                                    <i class="fas fa-folder text-white text-lg"></i>
-                                </div>
-                                <div>
-                                    <h4 class="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors duration-300">{{ $category->name }}</h4>
-                                    <p class="text-sm text-gray-500 flex items-center font-medium">
-                                        <i class="fas fa-calendar-alt mr-2 text-gray-400"></i>
-                                        Criada em {{ $category->created_at->format('d/m/Y H:i') }}
-                                    </p>
-                                </div>
+                <div class="bg-white rounded-2xl shadow-lg mb-6">
+                    <div class="p-6 flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center">
+                                <i class="fas fa-folder text-white text-lg"></i>
                             </div>
-                            
-                            <div class="flex items-center space-x-4">
-                                <span class="px-4 py-2 bg-emerald-100 text-emerald-800 rounded-full text-sm font-bold border border-emerald-200">
-                                    <i class="fas fa-check-circle mr-1"></i>
-                                    Ativa
-                                </span>
-                                <form action="{{ route('categories.destroy', $category->id) }}" 
-                                      method="POST" 
-                                      onsubmit="return confirm('Tem certeza que deseja excluir esta categoria?')"
-                                      class="inline">
+                            <div>
+                                <h4 class="text-xl font-bold">{{ $category->name }}</h4>
+                                <p class="text-sm text-gray-500">Criada em {{ $category->created_at->format('d/m/Y H:i') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <button class="open-modal inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white border"
+                                data-modal-target="modal-edit-cat-{{ $category->id }}">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+
+                            <form action="{{ route('categories.destroy', $category->id) }}" method="POST"
+                                onsubmit="return confirm('Excluir categoria?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                    class="p-3 bg-gradient-to-r from-red-500 to-pink-600 text-white rounded-xl">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal de edição da categoria (por item) -->
+                <div id="modal-edit-cat-{{ $category->id }}" class="modal fixed inset-0 z-50 hidden items-center justify-center px-4">
+                    <div class="modal-backdrop absolute inset-0 bg-black/50"></div>
+                    <div class="relative w-full max-w-lg mx-auto">
+                        <div class="bg-white rounded-2xl overflow-hidden shadow-2xl">
+                            <div class="p-6 bg-gradient-to-r from-orange-500 to-yellow-600 text-white flex items-center justify-between">
+                                <h3 class="text-xl font-bold">Editar Categoria</h3>
+                                <button type="button" class="close-modal text-white text-xl font-bold px-3 py-1">&times;</button>
+                            </div>
+                            <div class="p-6">
+                                <form action="{{ route('categories.update', $category->id) }}" method="POST">
                                     @csrf
-                                    @method('DELETE')
-                                    <button type="submit" 
-                                            class="p-3 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white rounded-xl hover:shadow-lg transition-all duration-300 hover:scale-110 group/btn">
-                                        <i class="fas fa-trash text-sm group-hover/btn:animate-pulse"></i>
-                                    </button>
+                                    @method('PATCH')
+                                    <label class="block text-sm font-semibold mb-2">Nome</label>
+                                    <input name="name" type="text" value="{{ old('name', $category->name) }}" required
+                                        class="w-full px-4 py-3 border rounded-lg mb-4">
+                                    <div class="flex justify-end gap-3">
+                                        <button type="button" class="close-modal px-4 py-2 border rounded-lg">Cancelar</button>
+                                        <button type="submit" class="px-4 py-2 bg-orange-500 text-white rounded-lg">Salvar</button>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -110,10 +127,6 @@
                     </div>
                     <h4 class="text-2xl font-bold text-gray-600 mb-3">Nenhuma categoria cadastrada</h4>
                     <p class="text-gray-500 text-lg mb-6">Adicione sua primeira categoria usando o formulário acima.</p>
-                    <div class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-2xl font-semibold shadow-lg">
-                        <i class="fas fa-arrow-up mr-2"></i>
-                        Use o formulário acima
-                    </div>
                 </div>
             @endforelse
         </div>
@@ -121,51 +134,11 @@
 
     <!-- Back Button -->
     <div class="flex justify-center mt-8 animate-fade-in-up" style="animation-delay: 0.6s">
-        <a href="{{ route('quiz') }}" 
-           class="px-8 py-4 bg-white text-gray-700 rounded-2xl font-bold text-lg border-2 border-gray-200 hover:bg-gray-50 hover:shadow-lg transition-all duration-300 flex items-center space-x-3 hover:scale-105">
+        <a href="{{ route('quiz') }}"
+            class="px-8 py-4 bg-white text-gray-700 rounded-2xl font-bold text-lg border-2 border-gray-200 hover:bg-gray-50 hover:shadow-lg transition-all duration-300 flex items-center space-x-3 hover:scale-105">
             <i class="fas fa-arrow-left"></i>
             <span>Voltar ao Quiz</span>
         </a>
     </div>
 </div>
-
-<style>
-/* Custom animations */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-.animate-fade-in-up {
-    animation: fadeInUp 0.6s ease-out forwards;
-}
-
-.animate-slide-in {
-    animation: slideIn 0.4s ease-out forwards;
-}
-
-.gradient-text {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-</style>
 @endsection

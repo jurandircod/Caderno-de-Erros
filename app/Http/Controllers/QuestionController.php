@@ -55,15 +55,10 @@ class QuestionController extends Controller
 
     public function indexDelete()
     {
-        if (FacadesAuth::check()) {
-            $userId = FacadesAuth::id();
-            $questions = Question::with('category')->where('user_id', $userId)->get();
-        } else {
-            // Se o usuário não está autenticado, a coleção de perguntas pode ser vazia
-            $questions = collect();
-        }
-
-        return view('questions.delete', compact('questions'));
+        $userId = FacadesAuth::id();
+        $questions = Question::with('category')->where('user_id', $userId)->get();
+        $categories = Category::where('user_id', $userId)->get();
+        return view('questions.delete', compact('questions', 'categories'));
     }
 
 
@@ -168,5 +163,39 @@ class QuestionController extends Controller
             ->get();
 
         return view('questions.stats', compact('mostWrong', 'mostCorrect', 'categories', 'selectedCategories'));
+    }
+
+    public function update(Request $request, Question $question)
+    {
+        $userId = FacadesAuth::check() ? FacadesAuth::id() : null;
+        if ($question->user_id && $question->user_id !== $userId) {
+            return NotificationController::redirectWithNotification('quiz', 'Você não tem permissão para editar essa questão.', 'error');
+        }
+
+        $request->validate([
+            'question_text' => 'required|string',
+            'option_a' => 'required|string',
+            'option_b' => 'required|string',
+            'option_c' => 'required|string',
+            'option_d' => 'required|string',
+            'correct_answer' => 'required|in:a,b,c,d',
+            'reason' => 'nullable|string',
+            'category_id' => 'nullable|exists:categories,id',
+        ]);
+
+        $question->update([
+            'question_text' => $request->question_text,
+            'options' => [
+                'a' => $request->option_a,
+                'b' => $request->option_b,
+                'c' => $request->option_c,
+                'd' => $request->option_d
+            ],
+            'correct_answer' => $request->correct_answer,
+            'reason' => $request->reason,
+            'category_id' => $request->category_id,
+        ]);
+
+        return redirect()->back()->with('success', 'Questão atualizada com sucesso!');
     }
 }
