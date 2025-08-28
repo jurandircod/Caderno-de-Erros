@@ -22,7 +22,6 @@ class QuestionController extends Controller
     {
         $userId = FacadesAuth::check() ? FacadesAuth::id() : null;
         if (!$userId) {
-            // Se o usuário não está autenticado, redireciona para a página de login
             return NotificationController::redirectWithNotification('login', 'Você precisa estar logado para criar questões.', 'error');
         }
 
@@ -32,24 +31,31 @@ class QuestionController extends Controller
             'option_b' => 'required|string',
             'option_c' => 'required|string',
             'option_d' => 'required|string',
-            'correct_answer' => 'required|in:a,b,c,d',
+            'option_e' => 'nullable|string',
+            'correct_answer' => 'required|in:a,b,c,d,e',
             'reason' => 'required|string',
-            'category_id' => 'required|exists:categories,id', // 🔹 nova validação
+            'category_id' => 'required|exists:categories,id',
         ]);
+
+        $options = [
+            'a' => $request->option_a,
+            'b' => $request->option_b,
+            'c' => $request->option_c,
+            'd' => $request->option_d,
+        ];
+        if ($request->filled('option_e')) {
+            $options['e'] = $request->option_e;
+        }
 
         $question = Question::create([
             'question_text' => $request->question_text,
-            'options' => [
-                'a' => $request->option_a,
-                'b' => $request->option_b,
-                'c' => $request->option_c,
-                'd' => $request->option_d
-            ],
+            'options' => $options,
             'correct_answer' => $request->correct_answer,
             'reason' => $request->reason,
-            'category_id' => $request->category_id, // 🔹 salva categoria
+            'category_id' => $request->category_id,
             'user_id' => $userId,
         ]);
+
         return redirect()->back()->with('success', 'Questão criada com sucesso!');
     }
 
@@ -61,7 +67,6 @@ class QuestionController extends Controller
         return view('questions.delete', compact('questions', 'categories'));
     }
 
-
     public function destroy($id)
     {
         $question = Question::findOrFail($id);
@@ -70,12 +75,10 @@ class QuestionController extends Controller
         return redirect()->route('questions.delete')->with('success', 'Questão excluída com sucesso!');
     }
 
-
     public function quiz(Request $request)
     {
         $userId = FacadesAuth::check() ? FacadesAuth::id() : null;
         if (!$userId) {
-            // Se o usuário não está autenticado, redireciona para a página de login
             return NotificationController::redirectWithNotification('login', 'Você precisa estar logado para acessar o quiz.', 'error');
         }
 
@@ -83,7 +86,13 @@ class QuestionController extends Controller
         $selectedCategories = $request->input('categories', []);
         $userId = FacadesAuth::check() ? FacadesAuth::id() : null;
 
+        // busca questão (sem shuffle)
         $question = Question::getRandomQuestion($selectedCategories, $userId);
+
+        if ($question) {
+            // faz o shuffle aqui — e o objeto retornado terá correct_answer remapeado
+            $question = $question->shuffled();
+        }
 
         if (!$question) {
             return view('quiz', [
@@ -104,11 +113,23 @@ class QuestionController extends Controller
     {
         $request->validate([
             'question_id' => 'required|exists:questions,id',
-            'answer' => 'required|string'
+            'answer' => 'required|string',
+            'shuffled_correct' => 'nullable|string'
         ]);
 
         $question = Question::findOrFail($request->question_id);
-        $isCorrect = $question->isCorrectAnswer($request->answer);
+
+        // Se o front enviou a alternativa correta remapeada (shuffled_correct), use-a.
+        // Isto é necessário porque o objeto salvo no DB tem a alternativa original.
+        $shuffledCorrect = $request->input('shuffled_correct', null);
+
+        if ($shuffledCorrect !== null && $shuffledCorrect !== '') {
+            $isCorrect = strtolower($request->answer) === strtolower($shuffledCorrect);
+            $correctForClient = $shuffledCorrect;
+        } else {
+            $isCorrect = $question->isCorrectAnswer($request->answer);
+            $correctForClient = $question->correct_answer;
+        }
 
         if ($isCorrect) {
             $question->increment('correct_count');
@@ -118,11 +139,10 @@ class QuestionController extends Controller
 
         return response()->json([
             'correct' => $isCorrect,
-            'correct_answer' => $question->correct_answer,
+            'correct_answer' => $correctForClient,
             'reason' => $question->reason
         ]);
     }
-
 
     public function getRandomQuestion(Request $request): JsonResponse
     {
@@ -138,10 +158,8 @@ class QuestionController extends Controller
 
     public function stats(Request $request)
     {
-
         $userId = FacadesAuth::check() ? FacadesAuth::id() : null;
         if (!$userId) {
-            // Se o usuário não está autenticado, redireciona para a página de login
             return NotificationController::redirectWithNotification('login', 'Você precisa estar logado para acessar o quiz.', 'error');
         }
 
@@ -178,19 +196,25 @@ class QuestionController extends Controller
             'option_b' => 'required|string',
             'option_c' => 'required|string',
             'option_d' => 'required|string',
-            'correct_answer' => 'required|in:a,b,c,d',
+            'option_e' => 'nullable|string',
+            'correct_answer' => 'required|in:a,b,c,d,e',
             'reason' => 'nullable|string',
             'category_id' => 'nullable|exists:categories,id',
         ]);
 
+        $options = [
+            'a' => $request->option_a,
+            'b' => $request->option_b,
+            'c' => $request->option_c,
+            'd' => $request->option_d,
+        ];
+        if ($request->filled('option_e')) {
+            $options['e'] = $request->option_e;
+        }
+
         $question->update([
             'question_text' => $request->question_text,
-            'options' => [
-                'a' => $request->option_a,
-                'b' => $request->option_b,
-                'c' => $request->option_c,
-                'd' => $request->option_d
-            ],
+            'options' => $options,
             'correct_answer' => $request->correct_answer,
             'reason' => $request->reason,
             'category_id' => $request->category_id,

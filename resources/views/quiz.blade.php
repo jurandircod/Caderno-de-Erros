@@ -63,7 +63,6 @@
                 <h3 class="text-2xl font-bold text-gray-800">Mini Simulado</h3>
             </div>
 
-
             <form method="GET" action="{{ route('quiz.simulado') }}" class="flex flex-wrap gap-4 justify-center">
                 <select name="qtd"
                     class="px-6 py-3 rounded-xl border border-indigo-200 text-lg font-semibold shadow-sm">
@@ -87,7 +86,10 @@
                     <input type="hidden" name="categories[]" value="{{ $catId }}">
                 @endforeach
 
-                <button type="submit" class="">Iniciar Simulado</button>
+                <button type="submit"
+                    class="px-8 py-4 bg-gradient-to-r from-indigo-500 to-blue-600 text-white rounded-2xl font-bold text-lg shadow-lg">
+                    Iniciar Simulado
+                </button>
             </form>
 
         </div>
@@ -198,7 +200,9 @@
                         </div>
                     </div>
 
+                    <!-- Hidden inputs: id da questão e alternativa correta após embaralhar -->
                     <input type="hidden" id="current-question-id" value="{{ $question->id }}">
+                    <input type="hidden" id="current-correct-answer" value="{{ $question->correct_answer }}">
                 @endif
             </div>
         </div>
@@ -212,9 +216,20 @@
     <script>
         let answered = false;
 
-        document.querySelectorAll('.option-btn').forEach(btn => {
-            btn.addEventListener('click', () => checkAnswer(btn));
-        });
+        // (re)bind - garante que existam listeners
+        function bindOptionButtons() {
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                // evitar duplicação de listeners
+                btn.removeEventListener('click', optionClickHandler);
+                btn.addEventListener('click', optionClickHandler);
+            });
+        }
+
+        function optionClickHandler(evt) {
+            checkAnswer(evt.currentTarget);
+        }
+
+        bindOptionButtons();
 
         function checkAnswer(button) {
             if (answered) return;
@@ -222,9 +237,28 @@
 
             const selectedAnswer = button.getAttribute('data-answer');
             const questionId = document.getElementById('current-question-id').value;
+            const shuffledCorrect = document.getElementById('current-correct-answer').value;
 
+            // desabilita botões
             document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
 
+            // Marca imediatamente no front usando a alternativa embaralhada
+            document.querySelectorAll('.option-btn').forEach(b => {
+                const opt = b.getAttribute('data-answer');
+                if (opt === shuffledCorrect) {
+                    b.classList.add('btn-success');
+                    // evita duplicar ícone
+                    if (!b.querySelector('.fa-check')) b.innerHTML += ' <i class="fas fa-check ml-auto"></i>';
+                }
+                if (opt === selectedAnswer && opt !== shuffledCorrect) {
+                    b.classList.add('btn-danger');
+                    if (!b.querySelector('.fa-times')) b.innerHTML += ' <i class="fas fa-times ml-auto"></i>';
+                }
+            });
+
+            document.getElementById('show-reason-btn').style.display = 'inline-flex';
+
+            // envia o registro ao backend (inclui shuffled_correct para o backend validar da mesma forma)
             fetch('{{ route('quiz.check') }}', {
                     method: 'POST',
                     headers: {
@@ -233,24 +267,17 @@
                     },
                     body: JSON.stringify({
                         question_id: questionId,
-                        answer: selectedAnswer
+                        answer: selectedAnswer,
+                        shuffled_correct: shuffledCorrect
                     })
                 })
                 .then(res => res.json())
                 .then(data => {
-                    document.querySelectorAll('.option-btn').forEach(b => {
-                        const opt = b.getAttribute('data-answer');
-                        if (opt === data.correct_answer) {
-                            b.classList.add('btn-success');
-                            b.innerHTML += ' <i class="fas fa-check ml-auto"></i>';
-                        }
-                        if (opt === selectedAnswer && !data.correct) {
-                            b.classList.add('btn-danger');
-                            b.innerHTML += ' <i class="fas fa-times ml-auto"></i>';
-                        }
-                    });
-
-                    document.getElementById('show-reason-btn').style.display = 'inline-flex';
+                    // opcional: reconciliar se backend discordar (por segurança)
+                    // neste fluxo o front já exibiu resposta, mas podemos atualizar reason/correct_answer com retorno.
+                    if (data && data.reason) {
+                        document.getElementById('reason-text').textContent = data.reason;
+                    }
                 })
                 .catch(err => console.error(err));
         }

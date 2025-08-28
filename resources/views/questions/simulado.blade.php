@@ -36,6 +36,9 @@
                         </label>
                     @endforeach
                 </div>
+
+                {{-- hidden com o mapa shuffled => original (JSON) --}}
+                <input type="hidden" class="shuffled-map" data-qid="{{ $q->id }}" name="shuffled_maps[{{ $q->id }}]" value='@json($q->shuffled_map)'>
                 <input type="hidden" name="question_ids[]" value="{{ $q->id }}">
             </div>
         @endforeach
@@ -94,6 +97,20 @@
 
     corregirBtn.addEventListener('click', () => submitSimulado(false));
 
+    function collectShuffledMaps() {
+        const maps = {};
+        document.querySelectorAll('.shuffled-map').forEach(inp => {
+            try {
+                const qid = inp.dataset.qid;
+                const parsed = JSON.parse(inp.value);
+                maps[qid] = parsed;
+            } catch (e) {
+                // ignore se falhar
+            }
+        });
+        return maps;
+    }
+
     function submitSimulado(timeout = false) {
         corregirBtn.disabled = true;
         corregirBtn.textContent = 'Corrigindo...';
@@ -109,11 +126,14 @@
             }
         });
 
+        const shuffledMaps = collectShuffledMaps();
+
         const payload = {
             question_ids: questionIds,
             answers: answers,
+            shuffled_maps: shuffledMaps,
             simulado_id: form.querySelector('input[name="simulado_id"]').value || null,
-            duration_seconds: {{ $simulado->time_seconds ?? ($newSimulado->time_seconds ?? ($timerMin ? 0 : 0)) }} ? ({{ $simulado->time_seconds ?? ($newSimulado->time_seconds ?? ($timerMin ? $timerMin*60 : 0)) }} - secondsLeft) : null,
+            duration_seconds: totalSeconds ? (totalSeconds - secondsLeft) : null,
             timed_out: timeout ? 1 : 0
         };
 
@@ -151,8 +171,10 @@
 
             // mostrar botões de refazer/exportar se veio simulado_id
             if (data.simulado_id) {
-                document.getElementById('refazer-btn').href = `/quiz/simulado/refazer/${data.simulado_id}`;
-                document.getElementById('export-btn').href = `/quiz/simulado/${data.simulado_id}/export-erros`;
+                const ref = document.getElementById('refazer-btn');
+                const exp = document.getElementById('export-btn');
+                if (ref) ref.href = `/quiz/simulado/refazer/${data.simulado_id}`;
+                if (exp) exp.href = `/quiz/simulado/${data.simulado_id}/export-erros`;
             }
 
             document.getElementById('resultado').classList.remove('hidden');

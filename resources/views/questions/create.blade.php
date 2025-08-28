@@ -122,6 +122,19 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="relative group">
+                                    <label class="block text-sm font-bold text-gray-700 mb-3">Opção E</label>
+                                    <div class="relative">
+                                        <input type="text" id="option_e"
+                                            class="w-full px-6 py-4 bg-white border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all duration-300 text-gray-800 placeholder-gray-400 font-medium group-hover:shadow-md @error('option_e') border-red-400 @enderror"
+                                            name="option_e" value="{{ old('option_e') }}" placeholder="Digite a opção E">
+                                        <div class="absolute inset-y-0 left-0 flex items-center pl-2">
+                                            <span
+                                                class="w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-xs font-bold">E</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -169,6 +182,9 @@
                                             C</option>
                                         <option value="d" {{ old('correct_answer') === 'd' ? 'selected' : '' }}>Opção
                                             D</option>
+                                        <option value="e" {{ old('correct_answer') === 'e' ? 'selected' : '' }}>Opção
+                                            E</option>
+
                                     </select>
                                     <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
                                         <i class="fas fa-chevron-down text-emerald-400"></i>
@@ -277,7 +293,8 @@
                 let text = e.target.value;
 
                 // Regex atualizado: aceita A) ou A. (maiúsculo ou minúsculo)
-                let regex = /(.*?)\s*[Aa][\)\.](.*?)\s*[Bb][\)\.](.*?)\s*[Cc][\)\.](.*?)\s*[Dd][\)\.](.*)/s;
+                let regex =
+                    /(.*?)\s*[Aa][\)\.](.*?)\s*[Bb][\)\.](.*?)\s*[Cc][\)\.](.*?)\s*[Dd][\)\.](.*?)\s*[Ee][\)\.](.*)/s;
                 let match = text.match(regex);
 
                 if (match) {
@@ -292,14 +309,18 @@
                     document.getElementById("option_b").value = match[3].trim();
                     document.getElementById("option_c").value = match[4].trim();
                     document.getElementById("option_d").value = match[5].trim();
+                    document.getElementById("option_e").value = match[6].trim();
+
 
                     // Add visual feedback
                     const inputs = [
                         document.getElementById("option_a"),
                         document.getElementById("option_b"),
                         document.getElementById("option_c"),
-                        document.getElementById("option_d")
+                        document.getElementById("option_d"),
+                        document.getElementById("option_e")
                     ];
+
 
                     inputs.forEach((input, index) => {
                         setTimeout(() => {
