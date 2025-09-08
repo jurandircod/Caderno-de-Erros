@@ -29,6 +29,8 @@ class QuizController extends Controller
         if (!empty($selectedCategories)) {
             $query->whereIn('category_id', $selectedCategories);
         }
+        $query->where('correct_count', '<=', 4); // filtrar questões com até 4 acertos
+
         if ($userId) {
             $query->where('user_id', $userId);
         }

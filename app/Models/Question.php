@@ -38,6 +38,8 @@ class Question extends Model
         if (!empty($categoryIds)) {
             $query->whereIn('category_id', $categoryIds);
         }
+        
+        $query->where('correct_count', '<=', 4);
 
         if (!empty($userId)) {
             $userId = is_numeric($userId) ? (int)$userId : null;
