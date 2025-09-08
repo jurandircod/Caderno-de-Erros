@@ -3,6 +3,7 @@
 ## Sistema Inteligente de Estudos com Questões
 
 O **Caderno de Erros** é uma aplicação web desenvolvida em Laravel que permite criar, gerenciar e estudar questões de múltipla escolha de forma inteligente, com foco nas questões que você mais erra.
+Versão em produção: https://caderno-de-erros-production.up.railway.app/login
 
 ![Tela Inicial]
 
