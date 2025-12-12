@@ -132,7 +132,7 @@
                         <span
                             class="px-4 py-2 bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 rounded-full text-sm font-bold border border-blue-200">
                             <i class="fas fa-question-circle mr-1"></i>
-                            Questão Ativa
+                           <a href="/questions/{{$question->id}}/cancel">Cancelar Questão</a>
                         </span>
                     </div>
 
@@ -141,7 +141,8 @@
                         <div
                             class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-8 mb-8 border border-indigo-100">
                             <h4 class="text-2xl font-bold text-gray-800 leading-relaxed" id="question-text">
-                                {{ $question->question_text }}</h4>
+                                {{ $question->question_text }}
+                            </h4>
                         </div>
 
                         <!-- Options -->

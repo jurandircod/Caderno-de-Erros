@@ -16,6 +16,7 @@ class Question extends Model
         'reason',
         'category_id',
         'user_id',
+        'status',
     ];
 
     protected $casts = [
@@ -40,6 +41,7 @@ class Question extends Model
         }
         
         $query->where('correct_count', '<=', 4);
+        $query->where('status', 'ativo');
 
         if (!empty($userId)) {
             $userId = is_numeric($userId) ? (int)$userId : null;
@@ -66,6 +68,8 @@ class Question extends Model
         return $weighted->random();
     }
 
+
+
     /**
      * Retorna uma cópia da questão com as opções embaralhadas
      * e com a resposta correta remapeada para a nova chave.
@@ -79,7 +83,6 @@ class Question extends Model
         if (empty($options) || !is_array($options)) {
             return $this;
         }
-
         // chave correta original (ex: 'a')
         $originalCorrectKey = $this->correct_answer;
 
@@ -141,4 +144,5 @@ class Question extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
 }

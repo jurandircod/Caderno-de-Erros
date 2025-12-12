@@ -22,6 +22,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/questions/create', [QuestionController::class, 'create'])->name('questions.create');
     Route::post('/questions', [QuestionController::class, 'store'])->name('questions.store');
     Route::delete('/questions/{id}', [QuestionController::class, 'destroy'])->name('questions.destroy');
+    Route::get('/questions/{id}/cancel', [QuestionController::class, 'cancel'])->name('questions.cancel');
     //categories
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');

@@ -88,6 +88,7 @@ class QuestionController extends Controller
 
         // busca questão (sem shuffle)
         $question = Question::getRandomQuestion($selectedCategories, $userId);
+        
 
         if ($question) {
             // faz o shuffle aqui — e o objeto retornado terá correct_answer remapeado
@@ -170,6 +171,7 @@ class QuestionController extends Controller
             ->when($selectedCategories, fn($q) => $q->whereIn('category_id', $selectedCategories))
             ->where('wrong_count', '>', 0)
             ->where('user_id', $userId)
+            ->where('status', 'ativo')
             ->orderByDesc('wrong_count')
             ->get();
 
@@ -177,6 +179,7 @@ class QuestionController extends Controller
             ->when($selectedCategories, fn($q) => $q->whereIn('category_id', $selectedCategories))
             ->where('correct_count', '>', 0)
             ->where('user_id', $userId)
+            ->where('status', 'ativo')
             ->orderByDesc('correct_count')
             ->get();
 
@@ -189,6 +192,7 @@ class QuestionController extends Controller
         if ($question->user_id && $question->user_id !== $userId) {
             return NotificationController::redirectWithNotification('quiz', 'Você não tem permissão para editar essa questão.', 'error');
         }
+
 
         $request->validate([
             'question_text' => 'required|string',
@@ -221,5 +225,14 @@ class QuestionController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Questão atualizada com sucesso!');
+    }
+
+    public function cancel($id) {
+ 
+        $question =  Question::where('id', $id);
+        $question->update([
+            "status" => 'desativado',
+        ]);
+        return redirect()->back()->with('success', 'Questão atualizada com sucesso');
     }
 }
